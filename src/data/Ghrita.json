@@ -1,6 +1,6 @@
 [
     {
-        "id": 1,
+        "id": 76,
         "entry_number": "1",
         "name": "Tiktaka Ghrita",
         "category": "Ghrita",
@@ -9,10 +9,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Pitta pradhana Kushta, Visarpa, Pitika, Daha, Ruk, Bhrama, Kandu, Pandu, Galaganda, Dushta Nadivrana, Apachi, Visphota, Vidradhi, Gulma, Sopha, Unmada, Mada, Hridroga, Timira, Vyanga, Grahani, Switra, Kamala, Bhangandhara, Apasmara, Udara, Pradara, Arshas, Raktapitta, Mutrakricchra, Pittaja roga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:34.875Z"
     },
     {
-        "id": 2,
+        "id": 77,
         "entry_number": "2",
         "name": "Mahatiktaka Ghrita",
         "category": "Ghrita",
@@ -21,10 +22,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Therapeutically Mahatiktaka Ghrita is superior'to Tiktaka Ghrita.\nIn the manufacture of Mahatiktaka Ghrita there is no necessity of preparing Kashaya as water & Amalaki rasa are directly mixed with Ghrita.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:35.022Z"
     },
     {
-        "id": 3,
+        "id": 78,
         "entry_number": "3",
         "name": "Panchatiktakaguggulu Ghrita",
         "category": "Ghrita",
@@ -33,10 +35,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Vataroga, Sandhi vata, Asthigata Vata, Majjagata Vata, Kushta, Nadivrana, Arbuda, Bhaga- ndhara, Gandamala, Urdwajatrugataroga, Gulma, Gudaroga, Prameha, Yakshma, Aruchi, Swasa, Pinasa, Kasa, Hridroga, Panduroga, Mada, Vidradhi, Vatarakta.\nThis is the best formulation for Vataroga.\nGuggulu will become more potent when combined with Ghrita and acts as Tridoshanasaka, Vrana Shodhaka and Ropaka.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:35.168Z"
     },
     {
-        "id": 4,
+        "id": 79,
         "entry_number": "4",
         "name": "Indukantha Ghrita",
         "category": "Ghrita",
@@ -45,10 +48,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Vataroga, Kshaya, Mahodara, Gulma, Shoola, Nimnonnata Jwara (Recurrent fever), Balyа.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:35.314Z"
     },
     {
-        "id": 5,
+        "id": 80,
         "entry_number": "5",
         "name": "Sukumara Ghrita",
         "category": "Ghrita",
@@ -57,10 +61,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Vrishya, Vajeekara, Kanthi, Lavanya and Pushti dayaka, Vriddhi, Vidradhi, Gulma, Arshas, Yoniroga, Vataroga, Pida, Sopha, Udara roga, Pleeha, Vibandha.\nAvoid Adhwagamana, Vahanayana and also exposing to Sun & Air.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:35.464Z"
     },
     {
-        "id": 6,
+        "id": 81,
         "entry_number": "6",
         "name": "Ikshu Doorvadi Ghrita",
         "category": "Ghrita",
@@ -69,10 +74,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Raktapitta",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:35.613Z"
     },
     {
-        "id": 7,
+        "id": 82,
         "entry_number": "7",
         "name": "Dhatryadi Ghrita",
         "category": "Ghrita",
@@ -81,10 +87,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity and administer internally with Sugar.",
         "indications": "Asrigdara, Pittaja Pandu, Pittaja Gulma, Somaroga, Vatarakta, Pitta vikara, Murcha, Mada, Unmada, Madatyaya and also acts as Garbhasthapaka in Vandhya.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:35.761Z"
     },
     {
-        "id": 8,
+        "id": 83,
         "entry_number": "8",
         "name": "Varahyadi Ghrita",
         "category": "Ghrita",
@@ -93,10 +100,11 @@
         "procedure": "Varahikanda Siddha Ghrita should be taken with Draksha, Masha, Aswagandha, Kadaliphala and Vamsalochana.",
         "indications": "Sarva Streeroga and Asthi roga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:35.908Z"
     },
     {
-        "id": 9,
+        "id": 84,
         "entry_number": "9",
         "name": "Modaka Twagadi Ghrita",
         "category": "Ghrita",
@@ -105,10 +113,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Asrigdara, Daruna, Asthi Srava (Somaroga)",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:36.055Z"
     },
     {
-        "id": 10,
+        "id": 85,
         "entry_number": "10",
         "name": "Varahyadi Ghrita (ii)",
         "category": "Ghrita",
@@ -117,10 +126,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity and administer internally with Sugar and Honey.",
         "indications": "Yoniroga\nThis Ghrita is used as internal administration and also for conducting Vasti karma.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:36.201Z"
     },
     {
-        "id": 11,
+        "id": 86,
         "entry_number": "11",
         "name": "Vrisha Ghrita (i)",
         "category": "Ghrita",
@@ -129,10 +139,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity and administer internally with Honey.",
         "indications": "Swasa, Kasa.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:36.347Z"
     },
     {
-        "id": 12,
+        "id": 87,
         "entry_number": "12",
         "name": "Vrisha Ghrita (ii)",
         "category": "Ghrita",
@@ -141,10 +152,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity and administer internally with Honey.",
         "indications": "Raktapitta, Pittaja Gulma, Jwara, Swasa, Kasa, Hridroga, Kamala, Timira, Bhrama, Visarpa, Swarasada.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:36.494Z"
     },
     {
-        "id": 13,
+        "id": 88,
         "entry_number": "13",
         "name": "Nirgundyadi Ghrita",
         "category": "Ghrita",
@@ -153,10 +165,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Kasa.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:36.640Z"
     },
     {
-        "id": 14,
+        "id": 89,
         "entry_number": "14",
         "name": "Dasanga Ghrita",
         "category": "Ghrita",
@@ -165,10 +178,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Kshaya, Gulma, Aruchi, Soola, Kasa, Hicсa, Arshas.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:36.794Z"
     },
     {
-        "id": 15,
+        "id": 90,
         "entry_number": "15",
         "name": "Sasa Vasadi Ghrita",
         "category": "Ghrita",
@@ -177,10 +191,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Kshaya, Kasa, Jwara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:36.940Z"
     },
     {
-        "id": 16,
+        "id": 91,
         "entry_number": "16",
         "name": "Kakamachyadi Ghrita",
         "category": "Ghrita",
@@ -189,10 +204,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Swarabhanga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:37.087Z"
     },
     {
-        "id": 17,
+        "id": 92,
         "entry_number": "17",
         "name": "Lasuna Ghrita",
         "category": "Ghrita",
@@ -201,10 +217,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Arshas, Gulma, Soola.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:37.236Z"
     },
     {
-        "id": 18,
+        "id": 93,
         "entry_number": "18",
         "name": "Darvi Baladi Ghrita",
         "category": "Ghrita",
@@ -213,10 +230,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Raktarshas.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:37.383Z"
     },
     {
-        "id": 19,
+        "id": 94,
         "entry_number": "19",
         "name": "Patha Karanjadi Ghrita(i)",
         "category": "Ghrita",
@@ -225,10 +243,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Sarva Atisara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:37.532Z"
     },
     {
-        "id": 20,
+        "id": 95,
         "entry_number": "20",
         "name": "Patha Karanjadi Ghrita(ii)",
         "category": "Ghrita",
@@ -237,10 +256,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Agni Deepaka, Gulma, Grahani.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:37.678Z"
     },
     {
-        "id": 21,
+        "id": 96,
         "entry_number": "21",
         "name": "Vastyamayantaka Ghrita",
         "category": "Ghrita",
@@ -249,10 +269,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "All types of Mutrakricchra, Sarkara, Ashmari, Vata Pittaja Sarva Vastiroga, Prameha.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:37.825Z"
     },
     {
-        "id": 22,
+        "id": 97,
         "entry_number": "22",
         "name": "Trikantaka Ghrita",
         "category": "Ghrita",
@@ -261,10 +282,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Mutra vikara, Prameha, Mutrakricchra, Vataroga, Sarkara, Ashmari.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:37.972Z"
     },
     {
-        "id": 23,
+        "id": 98,
         "entry_number": "23",
         "name": "Satavaryadi Ghrita",
         "category": "Ghrita",
@@ -273,10 +295,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.\nAfter the preparation of Ghrita adds Honey half of the quantity to Ghrita and also 1/4 qty. of Sugar and then preserve.",
         "indications": "Mutrakricchra, Mutra dosha, Sarkara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:38.123Z"
     },
     {
-        "id": 24,
+        "id": 99,
         "entry_number": "24",
         "name": "Akulyadi Ghrita",
         "category": "Ghrita",
@@ -285,10 +308,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "All types of Prameha.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:38.270Z"
     },
     {
-        "id": 25,
+        "id": 100,
         "entry_number": "25",
         "name": "Dhanvantari Ghrita",
         "category": "Ghrita",
@@ -297,10 +321,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Prameha Pitika, Pandu, Vidradhi, Gulma, Arshas, Sosha, Sopha, Garavisha, Udara roga, Swasa, Kasa, Krimi, Vriddhi, Pleeha, Vatarakta, Kushta, Unmada, Apasmara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:38.419Z"
     },
     {
-        "id": 26,
+        "id": 101,
         "entry_number": "26",
         "name": "Parpanadi Ghrita",
         "category": "Ghrita",
@@ -309,10 +334,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity. It is used internal as well as external purposes.",
         "indications": "Vriddhi",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:38.570Z"
     },
     {
-        "id": 27,
+        "id": 102,
         "entry_number": "27",
         "name": "Varunadi Ghrita",
         "category": "Ghrita",
@@ -321,10 +347,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "All types of Vriddhi, Udara roga, Gulma.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:38.716Z"
     },
     {
-        "id": 28,
+        "id": 103,
         "entry_number": "28",
         "name": "Kalyanaka Ghrita",
         "category": "Ghrita",
@@ -333,10 +360,11 @@
         "procedure": "Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Pandu, Kushta, Visha, Sosha, Meha, Moha, Jwara, Garavisha, Sukra Kshaya, Artava Kshaya, Manovyadha, Buddhinasa, Vachanasa, Alpavacha, Smriti, Balya, Mangalya, Ayushya, Kanthi, Soubhagya, Pushti dayaka.\nThis is the best formulation for Pumsavana karma.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:38.863Z"
     },
     {
-        "id": 29,
+        "id": 104,
         "entry_number": "29",
         "name": "Mahakalyanaka Ghrita",
         "category": "Ghrita",
@@ -345,10 +373,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Therapeutically it is Superior to Kalyanaka Ghrita.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:39.010Z"
     },
     {
-        "id": 30,
+        "id": 105,
         "entry_number": "30",
         "name": "Kushmanda Ghrita",
         "category": "Ghrita",
@@ -357,10 +386,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Sarva Kshaya (especially Pittaja Kshaya), Gulma, Vishamajwara, Varnya, Balya.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:39.156Z"
     },
     {
-        "id": 31,
+        "id": 106,
         "entry_number": "31",
         "name": "Mahakushmanda Ghrita",
         "category": "Ghrita",
@@ -369,10 +399,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity. After the completion of Ghrita preparation add Madhu 1 prastha and then preserve in a clean container.",
         "indications": "Jwara, Kasa, Kshaya, Swasa, Vatarakta, Visha dosha, Rakta Gulma, Raktapitta, Asthi Srava, Pradara, Mutrakricchra, Ashmari, Pandu, Каmala, Prameha, Pitta roga, Vataroga, Mangalya, Bala, Dhatu Vardhaka,Sukra Vardhaka. Vandhya nasaka, Garbha palaka.\nAswin twins, the celestial physicians, formulated this Mahakushmanda ghrita.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:39.304Z"
     },
     {
-        "id": 32,
+        "id": 107,
         "entry_number": "32",
         "name": "Jivantyadi Ghrita",
         "category": "Ghrita",
@@ -381,10 +412,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Timira roga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:39.452Z"
     },
     {
-        "id": 33,
+        "id": 108,
         "entry_number": "33",
         "name": "Patoladi Ghrita",
         "category": "Ghrita",
@@ -393,10 +425,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Ghrana, Karna, Akshi roga, Vidradhi, Jwara, Dushta Vrana, Kushta, Apachi, Suklatimira, Naktandhya, Ushna, Daha nasaka.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:39.600Z"
     },
     {
-        "id": 34,
+        "id": 109,
         "entry_number": "34",
         "name": "Triphaladi Ghrita",
         "category": "Ghrita",
@@ -405,10 +438,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity and administer internally with Honey or Sugar or Triphala Kashaya",
         "indications": "Timira roga",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:39.746Z"
     },
     {
-        "id": 35,
+        "id": 110,
         "entry_number": "35",
         "name": "Kshiridrumadi Ghrita",
         "category": "Ghrita",
@@ -417,10 +451,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity. It is to be used as Tarpana & Aschyotana.",
         "indications": "Netra roga",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:39.893Z"
     },
     {
-        "id": 36,
+        "id": 111,
         "entry_number": "36",
         "name": "Gopatmajadi Ghrita",
         "category": "Ghrita",
@@ -429,10 +464,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Sarva Visarpa",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:40.040Z"
     },
     {
-        "id": 37,
+        "id": 112,
         "entry_number": "37",
         "name": "Talisadi Ghrita",
         "category": "Ghrita",
@@ -441,10 +477,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Switra, Sidhma, Pitika, Vyanga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:40.187Z"
     },
     {
-        "id": 38,
+        "id": 113,
         "entry_number": "38",
         "name": "Grahanyantaka Ghrita",
         "category": "Ghrita",
@@ -453,10 +490,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Agni Deepaka, Gulma, Grahani.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:40.335Z"
     },
     {
-        "id": 39,
+        "id": 114,
         "entry_number": "39",
         "name": "Brahmi Ghrita",
         "category": "Ghrita",
@@ -465,10 +503,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.\nIt should be given in an increasing dosage, which starts with 1 pala per week and increase up to a maximum of 4 pala.",
         "indications": "Unmada, Kushta, Apasmara, Vandhya hara, Vani, Swara, Smriti & Medha Vardhaka.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:40.483Z"
     },
     {
-        "id": 40,
+        "id": 115,
         "entry_number": "40",
         "name": "Ashtanga Ghrita",
         "category": "Ghrita",
@@ -477,10 +516,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Ayushya, Vani, Medha, Smriti, Buddhi prada.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:40.630Z"
     },
     {
-        "id": 41,
+        "id": 116,
         "entry_number": "41",
         "name": "Saraswata Ghrita:",
         "category": "Ghrita",
@@ -489,10 +529,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.\nDuring the preparation of Ghrita small pieces of Gold is to be added to the above drugs or Ghrita can be taken with Swarna Bhasma.\nIt should be used as Pana, Abhyanga and also can be taken with meal.",
         "indications": "Smriti & Medhakara Rakshoghna Vishaghna.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:40.777Z"
     },
     {
-        "id": 42,
+        "id": 117,
         "entry_number": "42",
         "name": "Saraswata Ghrita[ii]",
         "category": "Ghrita",
@@ -501,10 +542,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Vani, Medha & Smriti Vardhaka, Agni Deepaka.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:40.924Z"
     },
     {
-        "id": 43,
+        "id": 118,
         "entry_number": "43",
         "name": "Samangadi Ghrita",
         "category": "Ghrita",
@@ -513,10 +555,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Dantodbheda janya roga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:41.072Z"
     },
     {
-        "id": 44,
+        "id": 119,
         "entry_number": "44",
         "name": "Mahapaisachika Ghrita",
         "category": "Ghrita",
@@ -525,10 +568,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Buddhi, Medha & Smriti karaka; Sareera Vriddhi - Karaka for children.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:41.219Z"
     },
     {
-        "id": 45,
+        "id": 120,
         "entry_number": "45",
         "name": "Maha Panchagavya Ghrita",
         "category": "Ghrita",
@@ -537,10 +581,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Jwara, Apasmara, Udara roga, Bhagandhara, Sopha, Arshas, Kamala, Gulma, Kasa, Graha roga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:41.367Z"
     },
     {
-        "id": 46,
+        "id": 121,
         "entry_number": "46",
         "name": "Sarvamayantaka Ghrita",
         "category": "Ghrita",
@@ -549,10 +594,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Adhyavata, Sirokampa, 7 types of Khanja, Manyasthambha, Hanusthambha, Greevasthambha, Jihwaka, Akshepaka, Siroroga, Pakshaghata, Ardita, Urusthambha, Karasthambha, Swasa, Balasaka, Yonisoola, Vasti Soola, Hricchoola, Kukshi Soola, Parswa Soola, Kantha Soola. Especially 20. types of Kapha roga, 40 types of Pitta roga & 80 types of Vata roga, Sarva Jwara, Kshaya, Unmada, Swasa, Apasmara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:41.513Z"
     },
     {
-        "id": 47,
+        "id": 122,
         "entry_number": "47",
         "name": "Jatyadi Ghrita",
         "category": "Ghrita",
@@ -561,10 +607,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Nadivrana, Marmasrita Vrana, Gambhira Vedanayukta Vrana.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:41.663Z"
     },
     {
-        "id": 48,
+        "id": 123,
         "entry_number": "48",
         "name": "Triphaladi Ghrita [Bindu Ghrita]",
         "category": "Ghrita",
@@ -573,10 +620,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Twagdosha, Kandu, Pama, Twachya\nMaharshi Atreya formulated this Bindu Ghrita.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:41.810Z"
     },
     {
-        "id": 49,
+        "id": 124,
         "entry_number": "49",
         "name": "Nalikera Ghrita",
         "category": "Ghrita",
@@ -585,10 +633,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Sopha, Gulma, Udara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:41.957Z"
     },
     {
-        "id": 50,
+        "id": 125,
         "entry_number": "50",
         "name": "Virechana Ghrita",
         "category": "Ghrita",
@@ -597,10 +646,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Sarva Udara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:42.104Z"
     },
     {
-        "id": 51,
+        "id": 126,
         "entry_number": "51",
         "name": "Panchagavya Ghrita",
         "category": "Ghrita",
@@ -609,10 +659,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Rakshoghna; Ayushya, Buddhi, Medha, Smriti Vardhaka; Swarabhanga, Nashtartava.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:42.256Z"
     },
     {
-        "id": 52,
+        "id": 127,
         "entry_number": "52",
         "name": "Brahmi Ghrita",
         "category": "Ghrita",
@@ -621,10 +672,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Vaksuddhi.\nGoddess Saraswati formulated this Brahmi Ghrita.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:42.403Z"
     },
     {
-        "id": 53,
+        "id": 128,
         "entry_number": "53",
         "name": "Vidangadi Ghrita",
         "category": "Ghrita",
@@ -633,10 +685,11 @@
         "procedure": "Boil milk by adding the above drugs and prepare curd.",
         "indications": "Vibandha, Koshtagata Vata, Pitta, Gulma, Hridroga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:42.549Z"
     },
     {
-        "id": 54,
+        "id": 129,
         "entry_number": "54",
         "name": "Soolahara Ghrita",
         "category": "Ghrita",
@@ -645,10 +698,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Soola",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:42.695Z"
     },
     {
-        "id": 55,
+        "id": 130,
         "entry_number": "55",
         "name": "Bhadrikadi Ghrita [Marmakshata Ghrita]",
         "category": "Ghrita",
@@ -657,10 +711,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Sarva Vataroga, Kasa, Hicca, Antra roga.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:42.843Z"
     },
     {
-        "id": 57,
+        "id": 131,
         "entry_number": "57",
         "name": "Punarnavadi Ghrita",
         "category": "Ghrita",
@@ -669,10 +724,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Soola, Gulma, Udara.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:42.990Z"
     },
     {
-        "id": 58,
+        "id": 132,
         "entry_number": "58",
         "name": "Sooladi Ghrita",
         "category": "Ghrita",
@@ -681,10 +737,11 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Soola.\nMaharshi Atreya formulated Sooladi Ghrita.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:43.136Z"
     },
     {
-        "id": 59,
+        "id": 133,
         "entry_number": "59",
         "name": "Ardraka Ghrita",
         "category": "Ghrita",
@@ -693,6 +750,7 @@
         "procedure": "Prepare Ghrita with the above drugs viz. Kalka, Sneha and Drava Dravyas taken in the specified quantity.",
         "indications": "Udarasoola, Pandu, Kamala.",
         "notes": "",
-        "source_file": "Ghrita.txt"
+        "source_file": "Ghrita.txt",
+        "created_at": "2026-02-26T11:43:43.283Z"
     }
 ]

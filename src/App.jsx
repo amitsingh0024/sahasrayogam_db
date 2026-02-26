@@ -1,21 +1,46 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { Search, Leaf } from 'lucide-react'
 import RecipeCard from './components/RecipeCard'
-import kashayaData from './data/Kashaya.json'
-import ghritaData from './data/Ghrita.json'
+import { supabase } from './lib/supabaseClient'
+import kashayaData_local from './data/Kashaya.json'
+import ghritaData_local from './data/Ghrita.json'
 
 function App() {
   const [query, setQuery] = useState('')
   const [searchField, setSearchField] = useState('all')
   const [category, setCategory] = useState('Kashaya')
+  const [allData, setAllData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      const { data, error } = await supabase
+        .from('formulations')
+        .select('*')
+
+      if (error) {
+        console.error('Error fetching data:', error)
+        // Fallback to local data if Supabase fails
+        setAllData([...kashayaData_local, ...ghritaData_local])
+      } else {
+        setAllData(data)
+      }
+      setIsLoading(false)
+    }
+
+    fetchData()
+  }, [])
 
   const categories = [
     { id: 'Kashaya', label: 'Kashaya', icon: 'Decoction' },
     { id: 'Ghrita', label: 'Ghrita', icon: 'Ghee' },
   ];
 
-  const currentData = category === 'Kashaya' ? kashayaData : ghritaData;
+  const currentData = useMemo(() => {
+    return allData.filter(item => item.category === category);
+  }, [allData, category]);
 
   const searchFields = [
     { id: 'all', label: 'All Fields', keys: ['name', 'ingredients', 'indications', 'sanskrit_verse', 'procedure'] },
@@ -81,8 +106,8 @@ function App() {
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
                 className={`px-6 py-1.5 rounded-full text-sm font-bold transition-all ${category === cat.id
-                    ? 'bg-white text-primary shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white text-primary shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
                   }`}
               >
                 {cat.label}
@@ -133,8 +158,8 @@ function App() {
               key={cat.id}
               onClick={() => setCategory(cat.id)}
               className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all ${category === cat.id
-                  ? 'bg-accent text-white shadow-sm'
-                  : 'bg-white text-gray-500 border border-gray-100'
+                ? 'bg-accent text-white shadow-sm'
+                : 'bg-white text-gray-500 border border-gray-100'
                 }`}
             >
               {cat.label}
@@ -162,7 +187,11 @@ function App() {
         {/* Results Info */}
         <div className="mb-6 flex items-center justify-between">
           <p className="text-sm text-gray-500 font-medium">
-            Showing <span className="text-primary font-bold">{filteredRecipes.length}</span> formulations
+            {isLoading ? (
+              <span>Loading formulations...</span>
+            ) : (
+              <>Showing <span className="text-primary font-bold">{filteredRecipes.length}</span> formulations</>
+            )}
           </p>
         </div>
 

@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Noto+Sans+Devanagari&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #F9F7F2;
+  --color-charcoal: #2C3E50;
+  --color-primary: #1A3C34;
+  --color-accent: #C5A059;
+  --color-sage: #8FBC8F;
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Lato", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-cream text-charcoal font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-primary font-bold;
+  }
+}

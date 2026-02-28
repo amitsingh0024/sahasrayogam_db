@@ -17,6 +17,12 @@ function App() {
     const fetchData = async () => {
       setIsLoading(true)
       setError(null)
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        setError('Missing configuration: Please check that VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in Render environment variables.')
+        setIsLoading(false)
+        return
+      }
+
       const { data, error: supabaseError } = await supabase
         .from('formulations')
         .select('*')
@@ -24,7 +30,7 @@ function App() {
 
       if (supabaseError) {
         console.error('Error fetching data:', supabaseError)
-        setError('Failed to connect to the database. Please check your connection or environment variables.')
+        setError(`Database Error: ${supabaseError.message || 'Failed to connect'}`)
       } else {
         setAllData(data || [])
       }

@@ -5,6 +5,7 @@ import RecipeCard from './components/RecipeCard'
 import { supabase } from './lib/supabaseClient'
 import kashayaData_local from './data/Kashaya.json'
 import ghritaData_local from './data/Ghrita.json'
+import tailaData_local from './data/Taila.json'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -23,7 +24,7 @@ function App() {
       if (error) {
         console.error('Error fetching data:', error)
         // Fallback to local data if Supabase fails
-        setAllData([...kashayaData_local, ...ghritaData_local])
+        setAllData([...kashayaData_local, ...ghritaData_local, ...tailaData_local])
       } else {
         setAllData(data)
       }
@@ -36,6 +37,7 @@ function App() {
   const categories = [
     { id: 'Kashaya', label: 'Kashaya', icon: 'Decoction' },
     { id: 'Ghrita', label: 'Ghrita', icon: 'Ghee' },
+    { id: 'Taila', label: 'Taila', icon: 'Oil' },
   ];
 
   const currentData = useMemo(() => {

@@ -18,6 +18,7 @@ function App() {
       const { data, error } = await supabase
         .from('formulations')
         .select('*')
+        .order('id', { ascending: true })
 
       if (error) {
         console.error('Error fetching data:', error)

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import Fuse from 'fuse.js'
-import { Search, Leaf } from 'lucide-react'
+import { Search, Leaf, AlertCircle } from 'lucide-react'
 import RecipeCard from './components/RecipeCard'
 import { supabase } from './lib/supabaseClient'
 
@@ -11,17 +11,20 @@ function App() {
   const [category, setCategory] = useState('Kashaya')
   const [allData, setAllData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
-      const { data, error } = await supabase
+      setError(null)
+      const { data, error: supabaseError } = await supabase
         .from('formulations')
         .select('*')
         .order('id', { ascending: true })
 
-      if (error) {
-        console.error('Error fetching data:', error)
+      if (supabaseError) {
+        console.error('Error fetching data:', supabaseError)
+        setError('Failed to connect to the database. Please check your connection or environment variables.')
       } else {
         setAllData(data || [])
       }
@@ -182,6 +185,12 @@ function App() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {error && (
+          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 flex items-center gap-3 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+            <AlertCircle size={20} className="shrink-0" />
+            <p className="text-sm font-medium">{error}</p>
+          </div>
+        )}
 
         {/* Results Info */}
         <div className="mb-6 flex items-center justify-between">

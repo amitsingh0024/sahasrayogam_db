@@ -192,9 +192,23 @@ function App() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 flex items-center gap-3 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-            <AlertCircle size={20} className="shrink-0" />
-            <p className="text-sm font-medium">{error}</p>
+          <div className="mb-8 p-6 bg-red-50 border border-red-200 rounded-2xl text-red-600 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertCircle size={22} className="shrink-0" />
+              <h3 className="font-bold text-lg">Connection Error</h3>
+            </div>
+            <div className="space-y-3 text-sm">
+              <p className="font-medium">{error}</p>
+              <div className="bg-white/50 p-4 rounded-xl border border-red-100 mt-4">
+                <p className="font-bold mb-2">How to fix this:</p>
+                <ul className="list-disc list-inside space-y-1 text-red-700">
+                  <li>Check if you are on a Restricted WiFi (Work/Public/School).</li>
+                  <li>Try switching to **Mobile Data/Hotspot** on this device.</li>
+                  <li>Check if a **VPN** or **Ad-blocker** is blocking `supabase.co`.</li>
+                  <li>Restart the browser or try a different one (Chrome/Safari).</li>
+                </ul>
+              </div>
+            </div>
           </div>
         )}
 

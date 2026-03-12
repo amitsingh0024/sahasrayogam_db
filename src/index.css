@@ -1,22 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Noto+Sans+Devanagari&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Lato:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #F9F7F2;
-  --color-charcoal: #2C3E50;
+  --color-cream: #F8F5EF;
+  --color-charcoal: #2C3428;
   --color-primary: #1A3C34;
   --color-accent: #C5A059;
-  --color-sage: #8FBC8F;
+  --color-sage: #6B8C5E;
+  --color-secondary: #8B7355;
 
   --font-serif: "Playfair Display", serif;
   --font-sans: "Lato", sans-serif;
+  --font-garamond: "EB Garamond", serif;
+  --font-devanagari: "Noto Sans Devanagari", sans-serif;
 }
 
 @layer base {
   body {
-    @apply bg-cream text-charcoal font-sans antialiased;
+    @apply bg-cream text-charcoal antialiased;
+    font-family: "EB Garamond", serif;
+    font-size: 16px;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif text-primary font-bold;
   }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .font-devanagari {
+    font-family: "Noto Sans Devanagari", sans-serif;
+  }
+  .font-garamond {
+    font-family: "EB Garamond", serif;
+  }
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-appear {
+  animation: fadeSlideUp 0.35s ease-out both;
 }

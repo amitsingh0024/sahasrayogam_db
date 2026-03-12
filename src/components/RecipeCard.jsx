@@ -1,109 +1,227 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+const CATEGORY_COLORS = {
+  Kashaya:  { primary: '#1A3C34', light: '#ECF3F0', badge: '#D0E7DF', border: '#1A3C3430' },
+  Ghrita:   { primary: '#7A5200', light: '#FBF3E3', badge: '#F5E4BB', border: '#7A520030' },
+  Taila:    { primary: '#3D5A1F', light: '#EDF2E5', badge: '#D8E8C8', border: '#3D5A1F30' },
+  Choornam: { primary: '#7A3F2E', light: '#F5EDE8', badge: '#EDD5C5', border: '#7A3F2E30' },
+};
+
+// Colors for ingredient sub-section labels (Kalka/Sneha/Drava)
+const INGREDIENT_LABEL_STYLES = {
+  'Kalka Dravya':  { bg: '#DCF0E4', text: '#1E6640', dot: '#3A9E5E' },
+  'Sneha Dravya':  { bg: '#FFF0D0', text: '#8B5200', dot: '#C5A059' },
+  'Drava Dravya':  { bg: '#DDEEF8', text: '#1B5E8A', dot: '#3B9ADE' },
+  '1st formula':   { bg: '#EDE8FF', text: '#5B35A8', dot: '#8B6CC5' },
+  '2nd formula':   { bg: '#FFE8F4', text: '#A8357A', dot: '#D4629C' },
+  '3rd formula':   { bg: '#E8F4FF', text: '#1B5F99', dot: '#4A90CC' },
+};
+
+const IngredientLine = ({ line, index }) => {
+  if (!line.trim()) return null;
+  const colonIdx = line.indexOf(':');
+  if (colonIdx > 0) {
+    const label = line.substring(0, colonIdx).trim();
+    const content = line.substring(colonIdx + 1).trim();
+    const labelStyle = INGREDIENT_LABEL_STYLES[label];
+    if (labelStyle) {
+      return (
+        <div className="mb-3">
+          <span
+            className="inline-flex items-center gap-1.5 text-xs font-bold font-sans px-2 py-0.5 rounded-full mr-2 mb-1"
+            style={{ backgroundColor: labelStyle.bg, color: labelStyle.text }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: labelStyle.dot }} />
+            {label}
+          </span>
+          <span className="text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
+            {content}
+          </span>
+        </div>
+      );
+    }
+    // Generic bold label (e.g. "Formula 1:")
+    return (
+      <div key={index} className="mb-2 text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
+        <span className="font-bold font-sans text-xs uppercase tracking-wide text-gray-500 mr-1.5">{label}:</span>
+        {content}
+      </div>
+    );
+  }
+  return (
+    <div className="mb-1 text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
+      {line}
+    </div>
+  );
+};
 
 const RecipeCard = ({ recipe }) => {
-    if (!recipe) return null;
+  if (!recipe) return null;
 
-    // Use a simple split for badges or custom logic
-    const indications = recipe.indications
-        ? recipe.indications.split(',').map(tag => tag.trim()).filter(Boolean)
-        : [];
+  const cat = CATEGORY_COLORS[recipe.category] || CATEGORY_COLORS.Kashaya;
 
-    return (
-        <div className="relative group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-transparent hover:border-accent overflow-hidden">
+  const indications = recipe.indications
+    ? recipe.indications.split(',').map(t => t.trim()).filter(Boolean)
+    : [];
 
-            {/* Accent Top Bar */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent opacity-80 group-hover:opacity-100 transition-opacity"></div>
+  return (
+    <div
+      className="relative bg-[#FFFDF8] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+      style={{
+        border: `1px solid ${cat.border}`,
+        borderLeft: `4px solid ${cat.primary}`,
+        boxShadow: '0 1px 8px rgba(26,60,52,0.05)',
+      }}
+    >
+      <div className="p-6">
 
-            <div className="p-6">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 className="text-xl font-serif font-bold text-primary leading-tight">
-                            {recipe.name}
-                        </h3>
-                        <span className="text-xs font-bold text-accent uppercase tracking-wider block mt-1">
-                            #{recipe.entry_number}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Sanskrit Verse Box */}
-                {recipe.sanskrit_verse && (
-                    <div className="mb-6 bg-slate-50 border-l-2 border-accent p-4 rounded-r-lg">
-                        <p className="font-serif text-charcoal/90 text-sm md:text-base leading-relaxed whitespace-pre-line italic">
-                            {recipe.sanskrit_verse}
-                        </p>
-                    </div>
-                )}
-
-                {/* Details Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-dashed border-gray-100">
-
-                    {/* Left Column: Ingredients */}
-                    <div>
-                        <h4 className="flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-                            <span className="w-1.5 h-1.5 rounded-full bg-accent mr-2"></span>
-                            Ingredients
-                        </h4>
-                        <div className="text-sm text-charcoal/80 leading-7 font-sans">
-                            {recipe.ingredients.split('\n').map((line, i) => {
-                                const parts = line.split(/:(.*)/s);
-                                if (parts.length > 1) {
-                                    return (
-                                        <div key={i} className="mb-2">
-                                            <span className="font-bold text-primary">{parts[0]}:</span>
-                                            {parts[1]}
-                                        </div>
-                                    );
-                                }
-                                return <div key={i} className="mb-1">{line}</div>;
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Right Column: Procedure & Indications */}
-                    <div className="space-y-8">
-                        {/* Procedure */}
-                        <div>
-                            <h4 className="flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-                                <span className="w-1.5 h-1.5 rounded-full bg-secondary mr-2"></span>
-                                Procedure
-                            </h4>
-                            <div className="text-sm text-charcoal/80 leading-7 font-sans">
-                                {recipe.procedure.split('\n').map((line, i) => (
-                                    <div key={i} className="mb-1">{line}</div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Indications Section */}
-                        {recipe.indications && (
-                            <div className="pt-6 border-t border-gray-50">
-                                <h4 className="flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400 mr-2"></span>
-                                    Indications
-                                </h4>
-                                <div className="text-sm text-charcoal/80 leading-relaxed font-sans hyphens-auto">
-                                    {recipe.indications}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Note Footer */}
-                {recipe.notes && (
-                    <div className="mt-8 pt-4 border-t border-gray-50 bg-gray-50/50 -mx-6 px-6 -mb-6">
-                        <p className="text-xs text-charcoal/60 italic leading-relaxed py-4">
-                            <span className="font-bold text-accent not-italic mr-1">Note:</span>
-                            {recipe.notes}
-                        </p>
-                    </div>
-                )}
-
-            </div>
+        {/* ── Header ── */}
+        <div className="flex justify-between items-start mb-4 gap-3">
+          <h3
+            className="text-xl font-serif font-bold leading-tight flex-1 min-w-0"
+            style={{ color: cat.primary }}
+          >
+            {recipe.name}
+          </h3>
+          <span
+            className="shrink-0 text-xs font-bold font-mono px-2.5 py-1 rounded-full"
+            style={{ backgroundColor: cat.badge, color: cat.primary }}
+          >
+            #{recipe.entry_number}
+          </span>
         </div>
-    );
+
+        {/* ── Sanskrit Verse ── */}
+        {recipe.sanskrit_verse && (
+          <div
+            className="mb-6 rounded-xl p-4 relative overflow-hidden"
+            style={{
+              backgroundColor: cat.light,
+              border: `1px solid ${cat.border}`,
+            }}
+          >
+            {/* Decorative mark */}
+            <span
+              className="absolute top-2 right-3 text-2xl opacity-20 select-none"
+              style={{ color: cat.primary, fontFamily: "'Noto Sans Devanagari', sans-serif" }}
+              aria-hidden="true"
+            >
+              ॐ
+            </span>
+            <p
+              className="text-sm leading-loose whitespace-pre-line relative z-10"
+              style={{
+                fontFamily: "'Noto Sans Devanagari', 'Playfair Display', serif",
+                color: '#3D3020',
+                lineHeight: '1.9',
+              }}
+            >
+              {recipe.sanskrit_verse}
+            </p>
+          </div>
+        )}
+
+        {/* ── Content Grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4"
+          style={{ borderTop: `1px dashed ${cat.border}` }}
+        >
+
+          {/* Left: Ingredients */}
+          <div>
+            <h4 className="flex items-center gap-2 text-[10px] font-bold font-sans uppercase tracking-[0.15em] text-gray-400 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: cat.primary }} />
+              Ingredients
+            </h4>
+            <div>
+              {recipe.ingredients
+                ? recipe.ingredients.split('\n').map((line, i) => (
+                    <IngredientLine key={i} line={line} index={i} />
+                  ))
+                : <span className="text-sm text-gray-400 italic font-garamond">—</span>
+              }
+            </div>
+          </div>
+
+          {/* Right: Procedure + Indications */}
+          <div className="space-y-6">
+
+            {/* Procedure */}
+            <div>
+              <h4 className="flex items-center gap-2 text-[10px] font-bold font-sans uppercase tracking-[0.15em] text-gray-400 mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                Procedure
+              </h4>
+              <div>
+                {recipe.procedure
+                  ? recipe.procedure.split('\n').map((line, i) => (
+                      <div
+                        key={i}
+                        className="mb-1 text-sm"
+                        style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.75', color: '#2C3428cc' }}
+                      >
+                        {line}
+                      </div>
+                    ))
+                  : <span className="text-sm text-gray-400 italic">—</span>
+                }
+              </div>
+            </div>
+
+            {/* Indications */}
+            {indications.length > 0 && (
+              <div>
+                <h4 className="flex items-center gap-2 text-[10px] font-bold font-sans uppercase tracking-[0.15em] text-gray-400 mb-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+                  Indications
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {indications.map((ind, i) => (
+                    <span
+                      key={i}
+                      className="text-xs px-2.5 py-1 rounded-full font-sans"
+                      style={{
+                        backgroundColor: cat.light,
+                        color: cat.primary,
+                        border: `1px solid ${cat.border}`,
+                        lineHeight: '1.4',
+                      }}
+                    >
+                      {ind}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Notes Footer ── */}
+        {recipe.notes && (
+          <div
+            className="-mx-6 -mb-6 mt-6 px-6 py-4"
+            style={{
+              backgroundColor: `${cat.light}90`,
+              borderTop: `1px solid ${cat.border}`,
+            }}
+          >
+            <p
+              className="text-xs leading-relaxed italic"
+              style={{ fontFamily: "'EB Garamond', serif", color: '#2C342899' }}
+            >
+              <span
+                className="not-italic font-bold font-sans text-[10px] uppercase tracking-[0.12em] mr-2"
+                style={{ color: cat.primary }}
+              >
+                ✦ Note
+              </span>
+              {recipe.notes.split('\n').join(' · ')}
+            </p>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
 };
 
 export default RecipeCard;

@@ -218,28 +218,68 @@ const RecipeCard = ({ recipe }) => {
         </div>
 
         {/* ── Notes Footer ── */}
-        {recipe.notes && (
-          <div
-            className="-mx-6 -mb-6 mt-6 px-6 py-4"
-            style={{
-              backgroundColor: `${cat.light}90`,
-              borderTop: `1px solid ${cat.border}`,
-            }}
-          >
-            <p
-              className="text-xs leading-relaxed italic"
-              style={{ fontFamily: "'EB Garamond', serif", color: '#2C342899' }}
+        {recipe.notes && (() => {
+          const noteLines = recipe.notes.split('\n').filter(l => l.trim());
+          return (
+            <div
+              className="-mx-6 -mb-6 mt-6 px-6 py-4"
+              style={{
+                backgroundColor: `${cat.light}90`,
+                borderTop: `1px solid ${cat.border}`,
+              }}
             >
-              <span
-                className="not-italic font-bold font-sans text-[10px] uppercase tracking-[0.12em] mr-2"
-                style={{ color: cat.primary }}
-              >
-                ✦ Note
-              </span>
-              {recipe.notes.split('\n').join(' · ')}
-            </p>
-          </div>
-        )}
+              <div className="space-y-1.5">
+                {noteLines.map((line, i) => {
+                  const numbered = line.match(/^(\d+)\.\s+(.*)/);
+                  if (numbered) {
+                    return (
+                      <div
+                        key={i}
+                        className="flex gap-2 pl-5 text-xs italic"
+                        style={{ fontFamily: "'EB Garamond', serif", color: '#2C342899', lineHeight: '1.6' }}
+                      >
+                        <span
+                          className="shrink-0 not-italic font-bold font-sans text-[10px]"
+                          style={{ color: cat.primary, minWidth: '1.25rem' }}
+                        >
+                          {numbered[1]}.
+                        </span>
+                        <span>{numbered[2]}</span>
+                      </div>
+                    );
+                  }
+                  // First line gets the "✦ Note" label prefix inline
+                  if (i === 0) {
+                    return (
+                      <p
+                        key={i}
+                        className="text-xs leading-relaxed italic"
+                        style={{ fontFamily: "'EB Garamond', serif", color: '#2C342899' }}
+                      >
+                        <span
+                          className="not-italic font-bold font-sans text-[10px] uppercase tracking-[0.12em] mr-2"
+                          style={{ color: cat.primary }}
+                        >
+                          ✦ Note
+                        </span>
+                        {line}
+                      </p>
+                    );
+                  }
+                  return (
+                    <p
+                      key={i}
+                      className="text-xs leading-relaxed italic"
+                      style={{ fontFamily: "'EB Garamond', serif", color: '#2C342899' }}
+                    >
+                      {line}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
 
       </div>
     </div>

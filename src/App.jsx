@@ -5,11 +5,15 @@ import RecipeCard from './components/RecipeCard'
 import { supabase } from './lib/supabaseClient'
 
 const CATEGORY_CONFIG = {
-  Kashaya:  { emoji: '🌿', desc: 'Decoctions',    color: '#1A3C34', light: '#ECF3F0' },
-  Ghrita:   { emoji: '🧈', desc: 'Medicated Ghee', color: '#7A5200', light: '#FBF3E3' },
-  Taila:    { emoji: '💧', desc: 'Medicated Oils',  color: '#3D5A1F', light: '#EDF2E5' },
-  Choornam: { emoji: '🌾', desc: 'Herbal Powders',  color: '#7A3F2E', light: '#F5EDE8' },
+  Kashaya:      { emoji: '🌿', desc: 'Decoctions',           color: '#1A3C34', light: '#ECF3F0' },
+  Ghrita:       { emoji: '🧈', desc: 'Medicated Ghee',       color: '#7A5200', light: '#FBF3E3' },
+  Taila:        { emoji: '💧', desc: 'Medicated Oils',        color: '#3D5A1F', light: '#EDF2E5' },
+  Choornam:     { emoji: '🌾', desc: 'Herbal Powders',        color: '#7A3F2E', light: '#F5EDE8' },
+  AsavaArishta: { emoji: '🫙', desc: 'Fermented Preparations', color: '#5C1835', light: '#F5E8EC' },
 }
+
+// Categories in the AsavaArishta combined tab
+const ASAVA_ARISHTA_CATS = new Set(['Arishta', 'Asava'])
 
 const SkeletonCard = ({ index }) => (
   <div
@@ -77,11 +81,22 @@ function App() {
 
   const categoryCounts = useMemo(() => {
     const counts = {}
-    categories.forEach(c => { counts[c.id] = allData.filter(item => item.category === c.id).length })
+    categories.forEach(c => {
+      if (c.id === 'AsavaArishta') {
+        counts[c.id] = allData.filter(item => ASAVA_ARISHTA_CATS.has(item.category)).length
+      } else {
+        counts[c.id] = allData.filter(item => item.category === c.id).length
+      }
+    })
     return counts
   }, [allData])
 
-  const currentData = useMemo(() => allData.filter(item => item.category === category), [allData, category])
+  const currentData = useMemo(() => {
+    if (category === 'AsavaArishta') {
+      return allData.filter(item => ASAVA_ARISHTA_CATS.has(item.category))
+    }
+    return allData.filter(item => item.category === category)
+  }, [allData, category])
 
   const searchFields = [
     { id: 'all',          label: 'All Fields',  keys: ['name', 'ingredients', 'indications', 'sanskrit_verse', 'procedure'] },
@@ -187,7 +202,7 @@ function App() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
                 <input
                   type="text"
-                  placeholder={`Search ${category}…`}
+                  placeholder={`Search ${category === 'AsavaArishta' ? 'Asava-Arishta' : category}…`}
                   className="w-full pl-9 pr-4 py-2 bg-amber-50/60 border border-amber-200/60 rounded-full text-sm focus:outline-none focus:bg-white focus:ring-2 transition-all font-garamond"
                   style={{ '--tw-ring-color': `${activeCat?.color}40` }}
                   value={query}
@@ -217,7 +232,7 @@ function App() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
           <input
             type="text"
-            placeholder={`Search ${category}…`}
+            placeholder={`Search ${category === 'AsavaArishta' ? 'Asava-Arishta' : category}…`}
             className="w-full pl-9 pr-4 py-2.5 bg-amber-50/70 border border-amber-200/60 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-amber-300/40 focus:bg-white transition-all font-garamond"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -291,7 +306,7 @@ function App() {
                 <span className="text-3xl">{activeCat?.emoji}</span>
                 <div>
                   <h2 className="text-lg font-serif font-bold leading-tight" style={{ color: activeCat?.color }}>
-                    {category} Prakarana
+                    {category === 'AsavaArishta' ? 'Asava-Arishta Prakarana' : `${category} Prakarana`}
                   </h2>
                   <p className="text-xs text-gray-400 font-sans mt-0.5">{activeCat?.desc}</p>
                 </div>

@@ -5,6 +5,15 @@ const CATEGORY_COLORS = {
   Ghrita:   { primary: '#7A5200', light: '#FBF3E3', badge: '#F5E4BB', border: '#7A520030' },
   Taila:    { primary: '#3D5A1F', light: '#EDF2E5', badge: '#D8E8C8', border: '#3D5A1F30' },
   Choornam: { primary: '#7A3F2E', light: '#F5EDE8', badge: '#EDD5C5', border: '#7A3F2E30' },
+  // AsavaArishta sub-categories
+  Arishta:  { primary: '#5C1835', light: '#F5E8EC', badge: '#EDD0DB', border: '#5C183530' },
+  Asava:    { primary: '#2B3F6B', light: '#E8EDF6', badge: '#C8D5ED', border: '#2B3F6B30' },
+};
+
+// Badge labels & accent colors for sub-categories within the AsavaArishta tab
+const SUBCATEGORY_BADGE = {
+  Arishta: { label: 'Arishta', bg: '#EDD0DB', text: '#5C1835' },
+  Asava:   { label: 'Asava',   bg: '#C8D5ED', text: '#2B3F6B' },
 };
 
 // Colors for ingredient sub-section labels (Kalka/Sneha/Drava)
@@ -59,6 +68,7 @@ const RecipeCard = ({ recipe }) => {
   if (!recipe) return null;
 
   const cat = CATEGORY_COLORS[recipe.category] || CATEGORY_COLORS.Kashaya;
+  const subBadge = SUBCATEGORY_BADGE[recipe.category] || null;
 
   const indications = recipe.indications
     ? recipe.indications.split(',').map(t => t.trim()).filter(Boolean)
@@ -77,12 +87,24 @@ const RecipeCard = ({ recipe }) => {
 
         {/* ── Header ── */}
         <div className="flex justify-between items-start mb-4 gap-3">
-          <h3
-            className="text-xl font-serif font-bold leading-tight flex-1 min-w-0"
-            style={{ color: cat.primary }}
-          >
-            {recipe.name}
-          </h3>
+          <div className="flex-1 min-w-0">
+            {/* Subcategory badge (Arishta / Asava) */}
+            {subBadge && (
+              <span
+                className="inline-flex items-center gap-1 text-[10px] font-bold font-sans uppercase tracking-[0.12em] px-2 py-0.5 rounded-full mb-2"
+                style={{ backgroundColor: subBadge.bg, color: subBadge.text }}
+              >
+                <span className="w-1 h-1 rounded-full" style={{ backgroundColor: subBadge.text }} />
+                {subBadge.label}
+              </span>
+            )}
+            <h3
+              className="text-xl font-serif font-bold leading-tight"
+              style={{ color: cat.primary }}
+            >
+              {recipe.name}
+            </h3>
+          </div>
           <span
             className="shrink-0 text-xs font-bold font-mono px-2.5 py-1 rounded-full"
             style={{ backgroundColor: cat.badge, color: cat.primary }}

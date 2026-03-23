@@ -3,7 +3,7 @@ import { X, Zap, Save, Trash2, ChevronDown, ChevronUp, Loader2 } from 'lucide-re
 import { supabaseAdmin } from '../lib/supabaseAdmin'
 
 // ─── Constants ──────────────────────────────────────────────────────────────
-const CATEGORIES = ['Kashaya', 'Ghrita', 'Taila', 'Choornam', 'Arishta', 'Asava', 'Lehya']
+const CATEGORIES = ['Kashaya', 'Ghrita', 'Taila', 'Choornam', 'Arishta', 'Asava', 'Lehya', 'Gutika']
 
 const CAT_META = {
   Kashaya:  { color: '#1A3C34', source: 'Kashaya.txt' },
@@ -13,6 +13,7 @@ const CAT_META = {
   Arishta:  { color: '#5C1835', source: 'Asava,Arishta.txt' },
   Asava:    { color: '#2B3F6B', source: 'Asava,Arishta.txt' },
   Lehya:    { color: '#7B3F00', source: 'Lehya.txt' },
+  Gutika:   { color: '#4A2080', source: 'Gutika.txt' },
 }
 
 // ─── Auto-parser ────────────────────────────────────────────────────────────

@@ -12,6 +12,7 @@ const CATEGORY_CONFIG = {
   Choornam:     { emoji: '🌾', desc: 'Herbal Powders',        color: '#7A3F2E', light: '#F5EDE8' },
   AsavaArishta: { emoji: '🫙', desc: 'Fermented Preparations', color: '#5C1835', light: '#F5E8EC' },
   Lehya:        { emoji: '🍯', desc: 'Electuaries & Confections', color: '#7B3F00', light: '#FDF3E0' },
+  Gutika:       { emoji: '💊', desc: 'Tablets & Pills',           color: '#4A2080', light: '#F0EAF8' },
 }
 
 // Categories in the AsavaArishta combined tab

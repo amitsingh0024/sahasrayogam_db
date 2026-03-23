@@ -207,14 +207,14 @@ function App() {
             </div>
 
             {/* Category tabs (desktop) */}
-            <nav className="hidden lg:flex items-center gap-1 bg-amber-50/60 p-1 rounded-2xl border border-amber-100/80">
+            <nav className="hidden lg:flex items-center gap-1 bg-amber-50/60 p-1 rounded-2xl border border-amber-100/80 overflow-x-auto min-w-0 shrink no-scrollbar">
               {categories.map((cat) => {
                 const isActive = category === cat.id
                 return (
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryChange(cat.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 ${
+                    className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all duration-200 ${
                       isActive ? 'text-white shadow-md' : 'text-gray-500 hover:text-charcoal hover:bg-white/70'
                     }`}
                     style={isActive ? { backgroundColor: cat.color } : {}}
@@ -290,7 +290,8 @@ function App() {
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
           {categories.map((cat) => {
             const isActive = category === cat.id
             return (
@@ -322,6 +323,9 @@ function App() {
               {field.label}
             </button>
           ))}
+          </div>
+          {/* Right fade — indicates more tabs to scroll */}
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white/90 to-transparent" />
         </div>
       </div>
 

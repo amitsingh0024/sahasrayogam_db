@@ -26,6 +26,11 @@ const INGREDIENT_LABEL_STYLES = {
   '1st formula':   { bg: '#EDE8FF', text: '#5B35A8', dot: '#8B6CC5' },
   '2nd formula':   { bg: '#FFE8F4', text: '#A8357A', dot: '#D4629C' },
   '3rd formula':   { bg: '#E8F4FF', text: '#1B5F99', dot: '#4A90CC' },
+  '4th formula':   { bg: '#E8F8EE', text: '#1B7A45', dot: '#3DAA6B' },
+  '5th formula':   { bg: '#FFF4E8', text: '#9A4F0A', dot: '#D4832E' },
+  '6th formula':   { bg: '#F4E8FF', text: '#7A1BAA', dot: '#A84DCC' },
+  '7th formula':   { bg: '#E8FFF4', text: '#0A7A5A', dot: '#2EAA8A' },
+  '8th formula':   { bg: '#FFECE8', text: '#9A2A1B', dot: '#CC4A3A' },
 };
 
 const IngredientLine = ({ line, index }) => {
@@ -37,9 +42,9 @@ const IngredientLine = ({ line, index }) => {
     const labelStyle = INGREDIENT_LABEL_STYLES[label];
     if (labelStyle) {
       return (
-        <div className="mb-3">
+        <div className="mb-3 flex items-start gap-2">
           <span
-            className="inline-flex items-center gap-1.5 text-xs font-bold font-sans px-2 py-0.5 rounded-full mr-2 mb-1"
+            className="inline-flex items-center gap-1.5 text-xs font-bold font-sans px-2 py-0.5 rounded-full shrink-0 mt-0.5"
             style={{ backgroundColor: labelStyle.bg, color: labelStyle.text }}
           >
             <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: labelStyle.dot }} />
@@ -51,16 +56,16 @@ const IngredientLine = ({ line, index }) => {
         </div>
       );
     }
-    // Generic bold label (e.g. "Formula 1:")
+    // Generic bold label
     return (
-      <div key={index} className="mb-2 text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
-        <span className="font-bold font-sans text-xs uppercase tracking-wide text-gray-500 mr-1.5">{label}:</span>
-        {content}
+      <div key={index} className="mb-2 flex items-start gap-1.5 text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
+        <span className="font-bold font-sans text-xs uppercase tracking-wide text-gray-500 shrink-0 mt-0.5">{label}:</span>
+        <span>{content}</span>
       </div>
     );
   }
   return (
-    <div className="mb-1 text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
+    <div className="mb-1 text-sm text-gray-500 italic" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
       {line}
     </div>
   );
@@ -73,7 +78,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit }) => {
   const subBadge = SUBCATEGORY_BADGE[recipe.category] || null;
 
   const indications = recipe.indications
-    ? recipe.indications.split(',').map(t => t.trim()).filter(Boolean)
+    ? recipe.indications.split(/[\n,]/).map(t => t.trim()).filter(Boolean)
     : [];
 
   return (

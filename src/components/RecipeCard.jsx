@@ -8,6 +8,7 @@ const CATEGORY_COLORS = {
   // AsavaArishta sub-categories
   Arishta:  { primary: '#5C1835', light: '#F5E8EC', badge: '#EDD0DB', border: '#5C183530' },
   Asava:    { primary: '#2B3F6B', light: '#E8EDF6', badge: '#C8D5ED', border: '#2B3F6B30' },
+  Lehya:    { primary: '#7B3F00', light: '#FDF3E0', badge: '#F5D9B0', border: '#7B3F0030' },
 };
 
 // Badge labels & accent colors for sub-categories within the AsavaArishta tab
@@ -64,7 +65,7 @@ const IngredientLine = ({ line, index }) => {
   );
 };
 
-const RecipeCard = ({ recipe }) => {
+const RecipeCard = ({ recipe, adminMode, onEdit }) => {
   if (!recipe) return null;
 
   const cat = CATEGORY_COLORS[recipe.category] || CATEGORY_COLORS.Kashaya;
@@ -76,13 +77,25 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <div
-      className="relative bg-[#FFFDF8] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+      className="relative bg-[#FFFDF8] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 group"
       style={{
         border: `1px solid ${cat.border}`,
         borderLeft: `4px solid ${cat.primary}`,
         boxShadow: '0 1px 8px rgba(26,60,52,0.05)',
       }}
     >
+      {/* ── Admin edit button ── */}
+      {adminMode && (
+        <button
+          onClick={() => onEdit?.(recipe)}
+          className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-lg text-white text-[11px] font-bold font-sans opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+          style={{ backgroundColor: cat.primary }}
+          title="Edit this formula"
+        >
+          ✎ Edit
+        </button>
+      )}
+
       <div className="p-6">
 
         {/* ── Header ── */}

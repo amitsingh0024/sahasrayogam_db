@@ -1,7 +1,8 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import Fuse from 'fuse.js'
-import { Search, AlertCircle } from 'lucide-react'
+import { Search, AlertCircle, PenLine } from 'lucide-react'
 import RecipeCard from './components/RecipeCard'
+import AdminPanel from './components/AdminPanel'
 import { supabase } from './lib/supabaseClient'
 
 const CATEGORY_CONFIG = {
@@ -10,6 +11,7 @@ const CATEGORY_CONFIG = {
   Taila:        { emoji: '💧', desc: 'Medicated Oils',        color: '#3D5A1F', light: '#EDF2E5' },
   Choornam:     { emoji: '🌾', desc: 'Herbal Powders',        color: '#7A3F2E', light: '#F5EDE8' },
   AsavaArishta: { emoji: '🫙', desc: 'Fermented Preparations', color: '#5C1835', light: '#F5E8EC' },
+  Lehya:        { emoji: '🍯', desc: 'Electuaries & Confections', color: '#7B3F00', light: '#FDF3E0' },
 }
 
 // Categories in the AsavaArishta combined tab
@@ -50,6 +52,42 @@ function App() {
   const [allData, setAllData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  // ── Admin mode ──────────────────────────────────────────────────────────
+  const [adminMode,    setAdminMode]    = useState(false)
+  const [adminOpen,    setAdminOpen]    = useState(false)
+  const [editingEntry, setEditingEntry] = useState(null)  // null = new entry
+
+  const openNewEntry = useCallback(() => {
+    setEditingEntry(null)
+    setAdminOpen(true)
+  }, [])
+
+  const openEditEntry = useCallback((recipe) => {
+    setEditingEntry(recipe)
+    setAdminOpen(true)
+  }, [])
+
+  const closeAdmin = useCallback(() => {
+    setAdminOpen(false)
+    setEditingEntry(null)
+  }, [])
+
+  const handleSaved = useCallback((newRow) => {
+    setAllData(prev => [...prev, newRow])
+    // Switch to that category tab so the user sees the result
+    if (newRow.category) setCategory(newRow.category === 'Arishta' || newRow.category === 'Asava' ? 'AsavaArishta' : newRow.category)
+    closeAdmin()
+  }, [closeAdmin])
+
+  const handleUpdated = useCallback((updated) => {
+    setAllData(prev => prev.map(r => r.id === updated.id ? updated : r))
+    closeAdmin()
+  }, [closeAdmin])
+
+  const handleDeleted = useCallback((id) => {
+    setAllData(prev => prev.filter(r => r.id !== id))
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -196,6 +234,19 @@ function App() {
               })}
             </nav>
 
+            {/* Admin mode toggle */}
+            <button
+              onClick={() => { setAdminMode(v => !v); if (adminOpen) closeAdmin() }}
+              title={adminMode ? 'Exit admin mode' : 'Admin mode'}
+              className="shrink-0 p-2 rounded-lg transition-all"
+              style={adminMode
+                ? { backgroundColor: activeCat?.color, color: '#FFF' }
+                : { color: '#9CA3AF' }
+              }
+            >
+              <PenLine size={16} />
+            </button>
+
             {/* Search (desktop md+) */}
             <div className="hidden md:flex items-center gap-2 grow max-w-xs">
               <div className="relative grow">
@@ -335,7 +386,11 @@ function App() {
           ) : filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe, i) => (
               <div key={recipe.id} className="card-appear" style={{ animationDelay: `${Math.min(i * 0.04, 0.4)}s` }}>
-                <RecipeCard recipe={recipe} />
+                <RecipeCard
+                  recipe={recipe}
+                  adminMode={adminMode}
+                  onEdit={openEditEntry}
+                />
               </div>
             ))
           ) : (
@@ -369,6 +424,31 @@ function App() {
           )}
         </div>
       </main>
+
+      {/* ── Floating "Add" button (admin mode only) ── */}
+      {adminMode && (
+        <button
+          onClick={openNewEntry}
+          title="Add new formula"
+          className="fixed bottom-8 right-8 z-40 w-14 h-14 rounded-full text-white text-2xl shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+          style={{ backgroundColor: activeCat?.color }}
+        >
+          +
+        </button>
+      )}
+
+      {/* ── Admin panel ── */}
+      {adminOpen && (
+        <AdminPanel
+          key={editingEntry?.id ?? 'new'}
+          recipe={editingEntry}
+          onClose={closeAdmin}
+          onSaved={handleSaved}
+          onUpdated={handleUpdated}
+          onDeleted={handleDeleted}
+        />
+      )}
+
     </div>
   )
 }

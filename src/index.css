@@ -55,3 +55,19 @@
 .card-appear {
   animation: fadeSlideUp 0.35s ease-out both;
 }
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes fieldFlash {
+  0%   { background-color: #C8EDB8; }
+  70%  { background-color: #C8EDB8; }
+  100% { background-color: transparent; }
+}
+
+.field-flash-wrap input,
+.field-flash-wrap textarea {
+  animation: fieldFlash 1.1s ease-out;
+}

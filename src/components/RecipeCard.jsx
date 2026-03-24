@@ -74,7 +74,7 @@ const IngredientLine = ({ line, index }) => {
   );
 };
 
-const RecipeCard = ({ recipe, adminMode, onEdit }) => {
+const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
   if (!recipe) return null;
 
   const cat = CATEGORY_COLORS[recipe.category] || CATEGORY_COLORS.Kashaya;
@@ -110,8 +110,18 @@ const RecipeCard = ({ recipe, adminMode, onEdit }) => {
         {/* ── Header ── */}
         <div className="flex justify-between items-start mb-4 gap-3">
           <div className="flex-1 min-w-0">
-            {/* Subcategory badge (Arishta / Asava) */}
-            {subBadge && (
+            {/* Category badge — shown when in global cross-tab search mode */}
+            {showCategory && (
+              <span
+                className="inline-flex items-center gap-1 text-[10px] font-bold font-sans uppercase tracking-[0.12em] px-2 py-0.5 rounded-full mb-2"
+                style={{ backgroundColor: cat.badge, color: cat.primary }}
+              >
+                <span className="w-1 h-1 rounded-full" style={{ backgroundColor: cat.primary }} />
+                {subBadge ? subBadge.label : recipe.category}
+              </span>
+            )}
+            {/* Subcategory badge (Arishta / Asava) — when not in search mode */}
+            {!showCategory && subBadge && (
               <span
                 className="inline-flex items-center gap-1 text-[10px] font-bold font-sans uppercase tracking-[0.12em] px-2 py-0.5 rounded-full mb-2"
                 style={{ backgroundColor: subBadge.bg, color: subBadge.text }}

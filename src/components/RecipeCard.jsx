@@ -65,7 +65,10 @@ const IngredientLine = ({ line, index }) => {
     );
   }
   return (
-    <div className="mb-1 text-sm text-gray-500 italic" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
+    <div
+      className={`mb-1 text-sm ${/^(The |According |In this|N\.B\.|Note:|This |Originally|Some |Therapeutically)/i.test(line.trim()) ? 'text-gray-400 italic' : 'text-gray-700'}`}
+      style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}
+    >
       {line}
     </div>
   );

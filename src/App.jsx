@@ -61,11 +61,6 @@ function App() {
   const [adminMode,    setAdminMode]    = useState(false)
   const [adminOpen,    setAdminOpen]    = useState(false)
   const [editingEntry, setEditingEntry] = useState(null)  // null = new entry
-  const [adminUnlocked,      setAdminUnlocked]      = useState(false)
-  const [showPasswordModal,  setShowPasswordModal]  = useState(false)
-  const [passwordInput,      setPasswordInput]      = useState('')
-  const [passwordError,      setPasswordError]      = useState(false)
-
   const openNewEntry = useCallback(() => {
     setEditingEntry(null)
     setAdminOpen(true)
@@ -81,30 +76,14 @@ function App() {
     setEditingEntry(null)
   }, [])
 
-  const handlePasswordSubmit = useCallback(() => {
-    const correct = import.meta.env.VITE_ADMIN_PASSWORD
-    if (passwordInput === correct) {
-      setAdminUnlocked(true)
-      setAdminMode(true)
-      setShowPasswordModal(false)
-      setPasswordInput('')
-      setPasswordError(false)
-    } else {
-      setPasswordError(true)
-      setPasswordInput('')
-    }
-  }, [passwordInput])
-
   const handleAdminToggle = useCallback(() => {
     if (adminMode) {
       setAdminMode(false)
       if (adminOpen) closeAdmin()
-    } else if (adminUnlocked) {
-      setAdminMode(true)
     } else {
-      setShowPasswordModal(true)
+      setAdminMode(true)
     }
-  }, [adminMode, adminUnlocked, adminOpen, closeAdmin])
+  }, [adminMode, adminOpen, closeAdmin])
 
   const handleSaved = useCallback((newRow) => {
     setAllData(prev => [...prev, newRow])
@@ -545,59 +524,6 @@ function App() {
         />
       )}
 
-      {/* ── Admin password modal ── */}
-      {showPasswordModal && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm"
-          onClick={(e) => { if (e.target === e.currentTarget) { setShowPasswordModal(false); setPasswordInput(''); setPasswordError(false) } }}
-        >
-          <div className="bg-white rounded-2xl p-6 shadow-2xl w-80 border border-amber-100/80">
-            <div className="flex items-center gap-3 mb-4">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm"
-                style={{ backgroundColor: activeCat?.color }}
-              >
-                <PenLine size={15} />
-              </div>
-              <div>
-                <h3 className="font-serif font-bold text-base text-primary leading-tight">Admin Access</h3>
-                <p className="text-[10px] text-gray-400 font-sans tracking-wide mt-0.5">Enter password to continue</p>
-              </div>
-            </div>
-            <input
-              type="password"
-              placeholder="Password"
-              value={passwordInput}
-              onChange={e => { setPasswordInput(e.target.value); setPasswordError(false) }}
-              onKeyDown={e => e.key === 'Enter' && handlePasswordSubmit()}
-              autoFocus
-              className={`w-full px-4 py-2.5 rounded-xl border text-sm font-garamond focus:outline-none focus:ring-2 transition-all ${
-                passwordError
-                  ? 'border-red-300 ring-red-200/60 bg-red-50 placeholder-red-300'
-                  : 'border-amber-200 focus:ring-amber-200/60 bg-amber-50/40'
-              }`}
-            />
-            {passwordError && (
-              <p className="text-xs text-red-500 font-sans mt-1.5">Incorrect password. Try again.</p>
-            )}
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={() => { setShowPasswordModal(false); setPasswordInput(''); setPasswordError(false) }}
-                className="flex-1 px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-500 font-sans hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handlePasswordSubmit}
-                className="flex-1 px-4 py-2 rounded-xl text-white text-sm font-bold font-sans transition-all hover:opacity-90 active:scale-95"
-                style={{ backgroundColor: activeCat?.color }}
-              >
-                Unlock
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   )

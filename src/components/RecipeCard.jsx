@@ -9,7 +9,8 @@ const CATEGORY_COLORS = {
   Arishta:  { primary: '#5C1835', light: '#F5E8EC', badge: '#EDD0DB', border: '#5C183530' },
   Asava:    { primary: '#2B3F6B', light: '#E8EDF6', badge: '#C8D5ED', border: '#2B3F6B30' },
   Lehya:    { primary: '#7B3F00', light: '#FDF3E0', badge: '#F5D9B0', border: '#7B3F0030' },
-  Gutika:   { primary: '#4A2080', light: '#F0EAF8', badge: '#DDD0F5', border: '#4A208030' },
+  Gutika:   { label: 'Vati', primary: '#4A2080', light: '#F0EAF8', badge: '#DDD0F5', border: '#4A208030' },
+  Vati:     { label: 'Gutika', primary: '#3B6B56', light: '#EAF8F1', badge: '#BCE8D5', border: '#3B6B5630' },
 };
 
 // Badge labels & accent colors for sub-categories within the AsavaArishta tab
@@ -117,7 +118,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                 style={{ backgroundColor: cat.badge, color: cat.primary }}
               >
                 <span className="w-1 h-1 rounded-full" style={{ backgroundColor: cat.primary }} />
-                {subBadge ? subBadge.label : recipe.category}
+                {subBadge ? subBadge.label : (cat.label || recipe.category)}
               </span>
             )}
             {/* Subcategory badge (Arishta / Asava) — when not in search mode */}

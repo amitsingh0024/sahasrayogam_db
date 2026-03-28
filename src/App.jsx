@@ -15,7 +15,8 @@ const CATEGORY_CONFIG = {
   Choornam:     { emoji: '🌾', desc: 'Herbal Powders',        color: '#7A3F2E', light: '#F5EDE8' },
   AsavaArishta: { emoji: '🫙', desc: 'Fermented Preparations', color: '#5C1835', light: '#F5E8EC' },
   Lehya:        { emoji: '🍯', desc: 'Electuaries & Confections', color: '#7B3F00', light: '#FDF3E0' },
-  Gutika:       { emoji: '💊', desc: 'Tablets & Pills',           color: '#4A2080', light: '#F0EAF8' },
+  Gutika:       { label: 'Vati', emoji: '💊', desc: 'Tablets & Pills',           color: '#4A2080', light: '#F0EAF8' },
+  Vati:         { label: 'Gutika', emoji: '🔮', desc: 'Gutika Preparations',       color: '#3B6B56', light: '#EAF8F1' },
 }
 
 // Categories in the AsavaArishta combined tab
@@ -127,7 +128,7 @@ function App() {
     fetchData()
   }, [])
 
-  const categories = Object.entries(CATEGORY_CONFIG).map(([id, cfg]) => ({ id, label: id, ...cfg }))
+  const categories = Object.entries(CATEGORY_CONFIG).map(([id, cfg]) => ({ id, label: cfg.label || id, ...cfg }))
 
   const categoryCounts = useMemo(() => {
     const counts = {}
@@ -430,7 +431,7 @@ function App() {
                   <span className="text-3xl">{activeCat?.emoji}</span>
                   <div>
                     <h2 className="text-lg font-serif font-bold leading-tight" style={{ color: activeCat?.color }}>
-                      {category === 'AsavaArishta' ? 'Asava-Arishta Prakarana' : `${category} Prakarana`}
+                      {category === 'AsavaArishta' ? 'Asava-Arishta Prakarana' : `${activeCat?.label || category} Prakarana`}
                     </h2>
                     <p className="text-xs text-gray-400 font-sans mt-0.5">{activeCat?.desc}</p>
                   </div>

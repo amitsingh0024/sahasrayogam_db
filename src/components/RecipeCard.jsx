@@ -247,6 +247,42 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                 </div>
               </div>
             )}
+
+            {/* ── Clinical Classification (new fields) ── */}
+            {(recipe.dosha_involved || recipe.organ_affected || recipe.area_affected) && (
+              <div className="pt-3 border-t grid grid-cols-1 gap-2" style={{ borderColor: cat.border }}>
+                {recipe.dosha_involved && (
+                  <div className="flex items-start gap-2">
+                    <span className="text-[10px] font-bold font-sans uppercase tracking-[0.12em] text-gray-400 shrink-0 mt-0.5 w-20">Dosha</span>
+                    <div className="flex flex-wrap gap-1">
+                      {recipe.dosha_involved.split(/[,\n]/).map(d => d.trim()).filter(Boolean).map((d, i) => (
+                        <span key={i} className="text-[11px] px-2 py-0.5 rounded-full font-sans font-semibold" style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}>{d}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {recipe.organ_affected && (
+                  <div className="flex items-start gap-2">
+                    <span className="text-[10px] font-bold font-sans uppercase tracking-[0.12em] text-gray-400 shrink-0 mt-0.5 w-20">Organ</span>
+                    <div className="flex flex-wrap gap-1">
+                      {recipe.organ_affected.split(/[,\n]/).map(d => d.trim()).filter(Boolean).map((d, i) => (
+                        <span key={i} className="text-[11px] px-2 py-0.5 rounded-full font-sans font-semibold" style={{ backgroundColor: '#FCE7F3', color: '#9D174D' }}>{d}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {recipe.area_affected && (
+                  <div className="flex items-start gap-2">
+                    <span className="text-[10px] font-bold font-sans uppercase tracking-[0.12em] text-gray-400 shrink-0 mt-0.5 w-20">Area</span>
+                    <div className="flex flex-wrap gap-1">
+                      {recipe.area_affected.split(/[,\n]/).map(d => d.trim()).filter(Boolean).map((d, i) => (
+                        <span key={i} className="text-[11px] px-2 py-0.5 rounded-full font-sans font-semibold" style={{ backgroundColor: '#DBEAFE', color: '#1E40AF' }}>{d}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

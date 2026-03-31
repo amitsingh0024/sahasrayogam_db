@@ -21,17 +21,21 @@ const CAT_META = {
 function parseRawEntry(raw) {
   const lines = raw.split('\n')
   const DEVANAGARI   = /[\u0900-\u097F]/
-  const CONTENTS_RE  = /^-{1,2}Contents?\s*:/i
+  const CONTENTS_RE  = /^-{0,2}Contents?\s*:/i
   const NUMBERED_RE  = /^-(\d+(?:st|nd|rd|th)\s+formula)\s*:(.*)/i
   const FORMULA_RE   = /^-{1,2}Formula\s*:(.*)/i
   const PROC_RE      = /^-Procedure\s*:(.*)/i
   const IND_RE       = /^-Indications?\s*:(.*)/i
+  const ORGAN_RE     = /^-Organ\s+Affected\s*:(.*)/i
+  const DOSHA_RE     = /^-Dosha\s+(?:Involved|Affected)?\s*:(.*)/i
+  const AREA_RE      = /^-Area\s+Affected\s*:(.*)/i
   const NOTE_HINTS   = [/^The same/i, /^According/i, /^In this context/i,
                         /^N\.B\./i, /^Note:/i, /^This formulation/i,
                         /^Originally/i, /^Therapeutically/i, /^The word/i]
 
   let entryNumber = '', name = ''
   let shlokas = [], formulaLines = [], procLines = [], indLines = [], noteLines = []
+  let organLines = [], doshaLines = [], areaLines = []
   let headerFound = false, inContents = false
   let section = null, pastInd = false
 
@@ -42,6 +46,12 @@ function parseRawEntry(raw) {
       procLines[procLines.length - 1] += ' ' + text
     else if (sec === 'indications' && indLines.length)
       indLines[indLines.length - 1] += ' ' + text
+    else if (sec === 'organ' && organLines.length)
+      organLines[organLines.length - 1] += ' ' + text
+    else if (sec === 'dosha' && doshaLines.length)
+      doshaLines[doshaLines.length - 1] += ' ' + text
+    else if (sec === 'area' && areaLines.length)
+      areaLines[areaLines.length - 1] += ' ' + text
     else
       noteLines.push(text)
   }
@@ -65,10 +75,13 @@ function parseRawEntry(raw) {
       continue
     }
 
-    const numM  = l.match(NUMBERED_RE)
-    const fmM   = l.match(FORMULA_RE)
-    const procM = l.match(PROC_RE)
-    const indM  = l.match(IND_RE)
+    const numM   = l.match(NUMBERED_RE)
+    const fmM    = l.match(FORMULA_RE)
+    const procM  = l.match(PROC_RE)
+    const indM   = l.match(IND_RE)
+    const organM = l.match(ORGAN_RE)
+    const doshaM = l.match(DOSHA_RE)
+    const areaM  = l.match(AREA_RE)
 
     if (numM) {
       formulaLines.push(numM[1].trim() + ': ' + numM[2].trim())
@@ -80,6 +93,12 @@ function parseRawEntry(raw) {
       const t = procM[1].trim(); if (t) procLines.push(t); section = 'procedure'
     } else if (indM) {
       const t = indM[1].trim(); if (t) indLines.push(t); section = 'indications'; pastInd = true
+    } else if (organM) {
+      const t = organM[1].trim(); if (t) organLines.push(t); section = 'organ'; pastInd = false
+    } else if (doshaM) {
+      const t = doshaM[1].trim(); if (t) doshaLines.push(t); section = 'dosha'; pastInd = false
+    } else if (areaM) {
+      const t = areaM[1].trim(); if (t) areaLines.push(t); section = 'area'; pastInd = false
     } else if (l.startsWith('-')) {
       const clean = l.slice(1).trim()
       if (!clean) continue
@@ -111,6 +130,9 @@ function parseRawEntry(raw) {
     ingredients:    formulaLines.join('\n'),
     procedure:      procLines.join('\n'),
     indications:    indLines.join('\n'),
+    organ_affected: organLines.join('\n'),
+    dosha_involved: doshaLines.join('\n'),
+    area_affected:  areaLines.join('\n'),
     notes:          noteLines.join('\n'),
   }
 }
@@ -139,8 +161,11 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
   const [verse,       setVerse]       = useState(recipe?.sanskrit_verse || '')
   const [ingredients, setIngredients] = useState(recipe?.ingredients    || '')
   const [procedure,   setProcedure]   = useState(recipe?.procedure      || '')
-  const [indications, setIndications] = useState(recipe?.indications    || '')
-  const [notes,       setNotes]       = useState(recipe?.notes          || '')
+  const [indications,    setIndications]    = useState(recipe?.indications    || '')
+  const [organAffected,  setOrganAffected]  = useState(recipe?.organ_affected || '')
+  const [doshaInvolved,  setDoshaInvolved]  = useState(recipe?.dosha_involved || '')
+  const [areaAffected,   setAreaAffected]   = useState(recipe?.area_affected  || '')
+  const [notes,          setNotes]          = useState(recipe?.notes          || '')
 
   const [rawText,    setRawText]    = useState('')
   const [showPaste,  setShowPaste]  = useState(!isEdit)
@@ -185,8 +210,11 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
     if (p.sanskrit_verse) { setVerse(p.sanskrit_verse);       toFlash.push('verse') }
     if (p.ingredients)    { setIngredients(p.ingredients);    toFlash.push('ing') }
     if (p.procedure)      { setProcedure(p.procedure);        toFlash.push('proc') }
-    if (p.indications)    { setIndications(p.indications);    toFlash.push('ind') }
-    if (p.notes)          { setNotes(p.notes);                toFlash.push('notes') }
+    if (p.indications)    { setIndications(p.indications);       toFlash.push('ind') }
+    if (p.organ_affected) { setOrganAffected(p.organ_affected); toFlash.push('organ') }
+    if (p.dosha_involved) { setDoshaInvolved(p.dosha_involved); toFlash.push('dosha') }
+    if (p.area_affected)  { setAreaAffected(p.area_affected);   toFlash.push('area') }
+    if (p.notes)          { setNotes(p.notes);                  toFlash.push('notes') }
     flash(...toFlash)
     toast(toFlash.length ? `${toFlash.length} fields parsed` : 'No structured data found — fill manually', toFlash.length > 0)
   }
@@ -202,6 +230,9 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
       ingredients:    ingredients.trim(),
       procedure:      procedure.trim(),
       indications:    indications.trim(),
+      organ_affected: organAffected.trim(),
+      dosha_involved: doshaInvolved.trim(),
+      area_affected:  areaAffected.trim(),
       notes:          notes.trim(),
       category,
       source_file:    CAT_META[category]?.source || '',
@@ -404,6 +435,38 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
               style={inputStyle}
             />
           </Field>
+
+          {/* ── 3 new clinical fields ────────────────────────────────── */}
+          <div className="grid grid-cols-1 gap-4 p-4 rounded-xl" style={{ backgroundColor: `${accent}08`, border: `1px solid ${borderC}` }}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400 -mb-1">Clinical Classification</p>
+            <Field label="Dosha Involved" flashing={flashSet.has('dosha')} optional>
+              <input
+                value={doshaInvolved}
+                onChange={e => setDoshaInvolved(e.target.value)}
+                placeholder="Vata, Pitta, Kapha…"
+                className={inputCls}
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="Organ Affected" flashing={flashSet.has('organ')} optional>
+              <input
+                value={organAffected}
+                onChange={e => setOrganAffected(e.target.value)}
+                placeholder="Liver, Heart, Lungs…"
+                className={inputCls}
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="Area Affected" flashing={flashSet.has('area')} optional>
+              <input
+                value={areaAffected}
+                onChange={e => setAreaAffected(e.target.value)}
+                placeholder="Abdomen, Head, Joints…"
+                className={inputCls}
+                style={inputStyle}
+              />
+            </Field>
+          </div>
 
           {/* ── Notes ───────────────────────────────────────────────────── */}
           <Field label="Notes" flashing={flashSet.has('notes')} optional>

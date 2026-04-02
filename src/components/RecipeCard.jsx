@@ -1,17 +1,33 @@
 import React from 'react';
 
 const CATEGORY_COLORS = {
-  Kashaya:  { primary: '#1A3C34', light: '#ECF3F0', badge: '#D0E7DF', border: '#1A3C3430' },
-  Ghrita:   { primary: '#7A5200', light: '#FBF3E3', badge: '#F5E4BB', border: '#7A520030' },
-  Taila:    { primary: '#3D5A1F', light: '#EDF2E5', badge: '#D8E8C8', border: '#3D5A1F30' },
-  Choornam: { primary: '#7A3F2E', light: '#F5EDE8', badge: '#EDD5C5', border: '#7A3F2E30' },
+  Kashaya:           { primary: '#1A3C34', light: '#ECF3F0', badge: '#D0E7DF', border: '#1A3C3430' },
+  KashayaParisishta: { primary: '#2C5F4A', light: '#E8F5EF', badge: '#C2E0D4', border: '#2C5F4A30' },
+  Ghrita:            { primary: '#7A5200', light: '#FBF3E3', badge: '#F5E4BB', border: '#7A520030' },
+  Taila:             { primary: '#3D5A1F', light: '#EDF2E5', badge: '#D8E8C8', border: '#3D5A1F30' },
+  Choornam:          { primary: '#7A3F2E', light: '#F5EDE8', badge: '#EDD5C5', border: '#7A3F2E30' },
   // AsavaArishta sub-categories
-  Arishta:  { primary: '#5C1835', light: '#F5E8EC', badge: '#EDD0DB', border: '#5C183530' },
-  Asava:    { primary: '#2B3F6B', light: '#E8EDF6', badge: '#C8D5ED', border: '#2B3F6B30' },
-  Lehya:    { primary: '#7B3F00', light: '#FDF3E0', badge: '#F5D9B0', border: '#7B3F0030' },
-  Gutika:   { label: 'Vati', primary: '#4A2080', light: '#F0EAF8', badge: '#DDD0F5', border: '#4A208030' },
-  Vati:     { label: 'Gutika', primary: '#3B6B56', light: '#EAF8F1', badge: '#BCE8D5', border: '#3B6B5630' },
+  Arishta:           { primary: '#5C1835', light: '#F5E8EC', badge: '#EDD0DB', border: '#5C183530' },
+  Asava:             { primary: '#2B3F6B', light: '#E8EDF6', badge: '#C8D5ED', border: '#2B3F6B30' },
+  Lehya:             { primary: '#7B3F00', light: '#FDF3E0', badge: '#F5D9B0', border: '#7B3F0030' },
+  Gutika:            { label: 'Vati',   primary: '#4A2080', light: '#F0EAF8', badge: '#DDD0F5', border: '#4A208030' },
+  Vati:              { label: 'Gutika', primary: '#3B6B56', light: '#EAF8F1', badge: '#BCE8D5', border: '#3B6B5630' },
 };
+
+// ── Search term highlighter ────────────────────────────────────────────────
+// Returns a mix of strings and <mark> elements. Safe: only renders plain text.
+function hl(text, terms) {
+  if (!text || !terms || terms.length === 0) return text;
+  const escaped = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
+  const parts = text.split(pattern);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    i % 2 === 1
+      ? <mark key={i} style={{ backgroundColor: '#FEF08A', borderRadius: '2px', padding: '0 1px', color: 'inherit' }}>{part}</mark>
+      : part
+  );
+}
 
 // Badge labels & accent colors for sub-categories within the AsavaArishta tab
 const SUBCATEGORY_BADGE = {
@@ -34,7 +50,7 @@ const INGREDIENT_LABEL_STYLES = {
   '8th formula':   { bg: '#FFECE8', text: '#9A2A1B', dot: '#CC4A3A' },
 };
 
-const IngredientLine = ({ line, index }) => {
+const IngredientLine = ({ line, index, terms }) => {
   if (!line.trim()) return null;
   const colonIdx = line.indexOf(':');
   if (colonIdx > 0) {
@@ -52,7 +68,7 @@ const IngredientLine = ({ line, index }) => {
             {label}
           </span>
           <span className="text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
-            {content}
+            {hl(content, terms)}
           </span>
         </div>
       );
@@ -61,7 +77,7 @@ const IngredientLine = ({ line, index }) => {
     return (
       <div key={index} className="mb-2 flex items-start gap-1.5 text-sm" style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}>
         <span className="font-bold font-sans text-xs uppercase tracking-wide text-gray-500 shrink-0 mt-0.5">{label}:</span>
-        <span>{content}</span>
+        <span>{hl(content, terms)}</span>
       </div>
     );
   }
@@ -70,12 +86,12 @@ const IngredientLine = ({ line, index }) => {
       className={`mb-1 text-sm ${/^(The |According |In this|N\.B\.|Note:|This |Originally|Some |Therapeutically)/i.test(line.trim()) ? 'text-gray-400 italic' : 'text-gray-700'}`}
       style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.7' }}
     >
-      {line}
+      {hl(line, terms)}
     </div>
   );
 };
 
-const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
+const RecipeCard = ({ recipe, adminMode, onEdit, showCategory, searchTerms = [] }) => {
   if (!recipe) return null;
 
   const cat = CATEGORY_COLORS[recipe.category] || CATEGORY_COLORS.Kashaya;
@@ -135,7 +151,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
               className="text-xl font-serif font-bold leading-tight"
               style={{ color: cat.primary }}
             >
-              {recipe.name}
+              {hl(recipe.name, searchTerms)}
             </h3>
           </div>
           <span
@@ -171,7 +187,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                 lineHeight: '1.9',
               }}
             >
-              {recipe.sanskrit_verse}
+              {hl(recipe.sanskrit_verse, searchTerms)}
             </p>
           </div>
         )}
@@ -190,7 +206,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
             <div>
               {recipe.ingredients
                 ? recipe.ingredients.split('\n').map((line, i) => (
-                    <IngredientLine key={i} line={line} index={i} />
+                    <IngredientLine key={i} line={line} index={i} terms={searchTerms} />
                   ))
                 : <span className="text-sm text-gray-400 italic font-garamond">—</span>
               }
@@ -214,7 +230,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                         className="mb-1 text-sm"
                         style={{ fontFamily: "'EB Garamond', serif", lineHeight: '1.75', color: '#2C3428cc' }}
                       >
-                        {line}
+                        {hl(line, searchTerms)}
                       </div>
                     ))
                   : <span className="text-sm text-gray-400 italic">—</span>
@@ -241,7 +257,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                         lineHeight: '1.4',
                       }}
                     >
-                      {ind}
+                      {hl(ind, searchTerms)}
                     </span>
                   ))}
                 </div>
@@ -313,7 +329,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                         >
                           {numbered[1]}.
                         </span>
-                        <span>{numbered[2]}</span>
+                        <span>{hl(numbered[2], searchTerms)}</span>
                       </div>
                     );
                   }
@@ -331,7 +347,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                         >
                           ✦ Note
                         </span>
-                        {line}
+                        {hl(line, searchTerms)}
                       </p>
                     );
                   }
@@ -341,7 +357,7 @@ const RecipeCard = ({ recipe, adminMode, onEdit, showCategory }) => {
                       className="text-xs leading-relaxed italic"
                       style={{ fontFamily: "'EB Garamond', serif", color: '#2C342899' }}
                     >
-                      {line}
+                      {hl(line, searchTerms)}
                     </p>
                   );
                 })}

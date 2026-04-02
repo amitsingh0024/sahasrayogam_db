@@ -9,14 +9,15 @@ import { buildSuggestionCorpus } from './lib/suggestionCorpus'
 import { useSearchSuggestions } from './hooks/useSearchSuggestions'
 
 const CATEGORY_CONFIG = {
-  Kashaya:      { emoji: '🌿', desc: 'Decoctions',           color: '#1A3C34', light: '#ECF3F0' },
-  Ghrita:       { emoji: '🧈', desc: 'Medicated Ghee',       color: '#7A5200', light: '#FBF3E3' },
-  Taila:        { emoji: '💧', desc: 'Medicated Oils',        color: '#3D5A1F', light: '#EDF2E5' },
-  Choornam:     { emoji: '🌾', desc: 'Herbal Powders',        color: '#7A3F2E', light: '#F5EDE8' },
-  AsavaArishta: { emoji: '🫙', desc: 'Fermented Preparations', color: '#5C1835', light: '#F5E8EC' },
-  Lehya:        { emoji: '🍯', desc: 'Electuaries & Confections', color: '#7B3F00', light: '#FDF3E0' },
-  Gutika:       { label: 'Vati', emoji: '💊', desc: 'Tablets & Pills',           color: '#4A2080', light: '#F0EAF8' },
-  Vati:         { label: 'Gutika', emoji: '🔮', desc: 'Gutika Preparations',       color: '#3B6B56', light: '#EAF8F1' },
+  Kashaya:            { emoji: '🌿', desc: 'Decoctions',              color: '#1A3C34', light: '#ECF3F0' },
+  KashayaParisishta:  { label: 'Kashaya Parisishta', emoji: '🍃', desc: 'Supplementary Decoctions', color: '#2C5F4A', light: '#E8F5EF' },
+  Ghrita:             { emoji: '🧈', desc: 'Medicated Ghee',          color: '#7A5200', light: '#FBF3E3' },
+  Taila:              { emoji: '💧', desc: 'Medicated Oils',           color: '#3D5A1F', light: '#EDF2E5' },
+  Choornam:           { emoji: '🌾', desc: 'Herbal Powders',           color: '#7A3F2E', light: '#F5EDE8' },
+  AsavaArishta:       { emoji: '🫙', desc: 'Fermented Preparations',  color: '#5C1835', light: '#F5E8EC' },
+  Lehya:              { emoji: '🍯', desc: 'Electuaries & Confections', color: '#7B3F00', light: '#FDF3E0' },
+  Gutika:             { label: 'Vati',   emoji: '💊', desc: 'Tablets & Pills',       color: '#4A2080', light: '#F0EAF8' },
+  Vati:               { label: 'Gutika', emoji: '🔮', desc: 'Gutika Preparations',   color: '#3B6B56', light: '#EAF8F1' },
 }
 
 // Categories in the AsavaArishta combined tab
@@ -89,7 +90,10 @@ function App() {
   const handleSaved = useCallback((newRow) => {
     setAllData(prev => [...prev, newRow])
     // Switch to that category tab so the user sees the result
-    if (newRow.category) setCategory(newRow.category === 'Arishta' || newRow.category === 'Asava' ? 'AsavaArishta' : newRow.category)
+    if (newRow.category) {
+      if (newRow.category === 'Arishta' || newRow.category === 'Asava') setCategory('AsavaArishta')
+      else setCategory(newRow.category)
+    }
     closeAdmin()
   }, [closeAdmin])
 
@@ -466,6 +470,7 @@ function App() {
                   adminMode={adminMode}
                   onEdit={openEditEntry}
                   showCategory={isGlobalSearch}
+                  searchTerms={isGlobalSearch ? query.trim().split(/\s+/).filter(t => t.length > 0) : []}
                 />
               </div>
             ))

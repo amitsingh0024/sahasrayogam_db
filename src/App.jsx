@@ -4,7 +4,7 @@ import { Search, AlertCircle, PenLine } from 'lucide-react'
 import RecipeCard from './components/RecipeCard'
 import AdminPanel from './components/AdminPanel'
 import SearchDropdown from './components/SearchDropdown'
-import { sql } from './lib/db'
+import { fetchFormulations } from './lib/api'
 import { buildSuggestionCorpus } from './lib/suggestionCorpus'
 import { useSearchSuggestions } from './hooks/useSearchSuggestions'
 
@@ -110,14 +110,8 @@ function App() {
     const fetchData = async () => {
       setIsLoading(true)
       setError(null)
-      if (!import.meta.env.VITE_NEON_CONNECTION_STRING) {
-        setError('Missing configuration: Please check that VITE_NEON_CONNECTION_STRING is set in environment variables.')
-        setIsLoading(false)
-        return
-      }
-
       try {
-        const data = await sql`SELECT * FROM formulations ORDER BY id ASC`
+        const data = await fetchFormulations()
         setAllData(data || [])
       } catch (err) {
         console.error('Error fetching data:', err)

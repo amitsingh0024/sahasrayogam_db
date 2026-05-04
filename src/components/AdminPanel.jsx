@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, Zap, Save, Trash2, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
-import { sql } from '../lib/db'
+import { insertFormulation, updateFormulation, deleteFormulation } from '../lib/api'
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const CATEGORIES = ['Kashaya', 'KashayaParisishta', 'Ghrita', 'Taila', 'Choornam', 'Arishta', 'Asava', 'Lehya', 'Vati', 'Gutika']
@@ -241,39 +241,12 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
 
     try {
       if (isEdit) {
-        const [updated] = await sql`
-          UPDATE formulations SET
-            entry_number    = ${payload.entry_number},
-            name            = ${payload.name},
-            sanskrit_verse  = ${payload.sanskrit_verse},
-            ingredients     = ${payload.ingredients},
-            procedure       = ${payload.procedure},
-            indications     = ${payload.indications},
-            organ_affected  = ${payload.organ_affected},
-            dosha_involved  = ${payload.dosha_involved},
-            area_affected   = ${payload.area_affected},
-            notes           = ${payload.notes},
-            category        = ${payload.category},
-            source_file     = ${payload.source_file}
-          WHERE id = ${recipe.id}
-          RETURNING *
-        `
+        const updated = await updateFormulation(recipe.id, payload)
         setSaving(false)
         toast(`Updated — ${updated.name}`)
         onUpdated?.(updated)
       } else {
-        const [saved] = await sql`
-          INSERT INTO formulations
-            (entry_number, name, sanskrit_verse, ingredients, procedure,
-             indications, organ_affected, dosha_involved, area_affected,
-             notes, category, source_file)
-          VALUES
-            (${payload.entry_number}, ${payload.name}, ${payload.sanskrit_verse},
-             ${payload.ingredients}, ${payload.procedure}, ${payload.indications},
-             ${payload.organ_affected}, ${payload.dosha_involved}, ${payload.area_affected},
-             ${payload.notes}, ${payload.category}, ${payload.source_file})
-          RETURNING *
-        `
+        const saved = await insertFormulation(payload)
         setSaving(false)
         toast(`Saved — ${saved.name}`)
         onSaved?.(saved)
@@ -290,7 +263,7 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
     if (!window.confirm(`Permanently delete "${recipe.name}"?\nThis cannot be undone.`)) return
     setDeleting(true)
     try {
-      await sql`DELETE FROM formulations WHERE id = ${recipe.id}`
+      await deleteFormulation(recipe.id)
       onDeleted?.(recipe.id)
       onClose()
     } catch (err) {

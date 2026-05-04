@@ -4,7 +4,7 @@ import { Search, AlertCircle, PenLine } from 'lucide-react'
 import RecipeCard from './components/RecipeCard'
 import AdminPanel from './components/AdminPanel'
 import SearchDropdown from './components/SearchDropdown'
-import { supabase } from './lib/supabaseClient'
+import { fetchFormulations } from './lib/api'
 import { buildSuggestionCorpus } from './lib/suggestionCorpus'
 import { useSearchSuggestions } from './hooks/useSearchSuggestions'
 
@@ -110,22 +110,12 @@ function App() {
     const fetchData = async () => {
       setIsLoading(true)
       setError(null)
-      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        setError('Missing configuration: Please check that VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in Render environment variables.')
-        setIsLoading(false)
-        return
-      }
-
-      const { data, error: supabaseError } = await supabase
-        .from('formulations')
-        .select('*')
-        .order('id', { ascending: true })
-
-      if (supabaseError) {
-        console.error('Error fetching data:', supabaseError)
-        setError(`Database Error: ${supabaseError.message || 'Failed to connect'}`)
-      } else {
+      try {
+        const data = await fetchFormulations()
         setAllData(data || [])
+      } catch (err) {
+        console.error('Error fetching data:', err)
+        setError('Database Error: Failed to connect. Please try again later.')
       }
       setIsLoading(false)
     }
@@ -408,7 +398,7 @@ function App() {
                 <ul className="list-disc list-inside space-y-1 text-red-700">
                   <li>Check if you are on a Restricted WiFi (Work/Public/School).</li>
                   <li>Try switching to Mobile Data/Hotspot on this device.</li>
-                  <li>Check if a VPN or Ad-blocker is blocking supabase.co.</li>
+                  <li>Check if a VPN or Ad-blocker is blocking neon.tech.</li>
                   <li>Restart the browser or try a different one (Chrome/Safari).</li>
                 </ul>
               </div>

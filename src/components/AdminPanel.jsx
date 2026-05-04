@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, Zap, Save, Trash2, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
-import { supabaseAdmin } from '../lib/supabaseAdmin'
+import { insertFormulation, updateFormulation, deleteFormulation } from '../lib/api'
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const CATEGORIES = ['Kashaya', 'KashayaParisishta', 'Ghrita', 'Taila', 'Choornam', 'Arishta', 'Asava', 'Lehya', 'Vati', 'Gutika']
@@ -239,22 +239,21 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
       source_file:    CAT_META[category]?.source || '',
     }
 
-    if (isEdit) {
-      const { data, error } = await supabaseAdmin
-        .from('formulations').update(payload).eq('id', recipe.id).select()
+    try {
+      if (isEdit) {
+        const updated = await updateFormulation(recipe.id, payload)
+        setSaving(false)
+        toast(`Updated — ${updated.name}`)
+        onUpdated?.(updated)
+      } else {
+        const saved = await insertFormulation(payload)
+        setSaving(false)
+        toast(`Saved — ${saved.name}`)
+        onSaved?.(saved)
+      }
+    } catch (err) {
       setSaving(false)
-      if (error) { toast('Update failed: ' + error.message, false); return }
-      const updated = data?.[0] ?? { ...payload, id: recipe.id }
-      toast(`Updated — ${updated.name}`)
-      onUpdated?.(updated)
-    } else {
-      const { data, error } = await supabaseAdmin
-        .from('formulations').insert([payload]).select()
-      setSaving(false)
-      if (error) { toast('Save failed: ' + error.message, false); return }
-      const saved = data?.[0] ?? payload
-      toast(`Saved — ${saved.name}`)
-      onSaved?.(saved)
+      toast((isEdit ? 'Update' : 'Save') + ' failed: ' + err.message, false)
     }
   }
 
@@ -263,11 +262,14 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
     if (!isEdit) return
     if (!window.confirm(`Permanently delete "${recipe.name}"?\nThis cannot be undone.`)) return
     setDeleting(true)
-    const { error } = await supabaseAdmin.from('formulations').delete().eq('id', recipe.id)
-    setDeleting(false)
-    if (error) { toast('Delete failed: ' + error.message, false); return }
-    onDeleted?.(recipe.id)
-    onClose()
+    try {
+      await deleteFormulation(recipe.id)
+      onDeleted?.(recipe.id)
+      onClose()
+    } catch (err) {
+      setDeleting(false)
+      toast('Delete failed: ' + err.message, false)
+    }
   }
 
   // ── Input style ──────────────────────────────────────────────────────────

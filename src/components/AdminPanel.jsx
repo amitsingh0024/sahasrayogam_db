@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, Zap, Save, Trash2, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
-import { supabaseAdmin } from '../lib/supabaseAdmin'
+import { sql } from '../lib/db'
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const CATEGORIES = ['Kashaya', 'KashayaParisishta', 'Ghrita', 'Taila', 'Choornam', 'Arishta', 'Asava', 'Lehya', 'Vati', 'Gutika']
@@ -239,22 +239,48 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
       source_file:    CAT_META[category]?.source || '',
     }
 
-    if (isEdit) {
-      const { data, error } = await supabaseAdmin
-        .from('formulations').update(payload).eq('id', recipe.id).select()
+    try {
+      if (isEdit) {
+        const [updated] = await sql`
+          UPDATE formulations SET
+            entry_number    = ${payload.entry_number},
+            name            = ${payload.name},
+            sanskrit_verse  = ${payload.sanskrit_verse},
+            ingredients     = ${payload.ingredients},
+            procedure       = ${payload.procedure},
+            indications     = ${payload.indications},
+            organ_affected  = ${payload.organ_affected},
+            dosha_involved  = ${payload.dosha_involved},
+            area_affected   = ${payload.area_affected},
+            notes           = ${payload.notes},
+            category        = ${payload.category},
+            source_file     = ${payload.source_file}
+          WHERE id = ${recipe.id}
+          RETURNING *
+        `
+        setSaving(false)
+        toast(`Updated — ${updated.name}`)
+        onUpdated?.(updated)
+      } else {
+        const [saved] = await sql`
+          INSERT INTO formulations
+            (entry_number, name, sanskrit_verse, ingredients, procedure,
+             indications, organ_affected, dosha_involved, area_affected,
+             notes, category, source_file)
+          VALUES
+            (${payload.entry_number}, ${payload.name}, ${payload.sanskrit_verse},
+             ${payload.ingredients}, ${payload.procedure}, ${payload.indications},
+             ${payload.organ_affected}, ${payload.dosha_involved}, ${payload.area_affected},
+             ${payload.notes}, ${payload.category}, ${payload.source_file})
+          RETURNING *
+        `
+        setSaving(false)
+        toast(`Saved — ${saved.name}`)
+        onSaved?.(saved)
+      }
+    } catch (err) {
       setSaving(false)
-      if (error) { toast('Update failed: ' + error.message, false); return }
-      const updated = data?.[0] ?? { ...payload, id: recipe.id }
-      toast(`Updated — ${updated.name}`)
-      onUpdated?.(updated)
-    } else {
-      const { data, error } = await supabaseAdmin
-        .from('formulations').insert([payload]).select()
-      setSaving(false)
-      if (error) { toast('Save failed: ' + error.message, false); return }
-      const saved = data?.[0] ?? payload
-      toast(`Saved — ${saved.name}`)
-      onSaved?.(saved)
+      toast((isEdit ? 'Update' : 'Save') + ' failed: ' + err.message, false)
     }
   }
 
@@ -263,11 +289,14 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
     if (!isEdit) return
     if (!window.confirm(`Permanently delete "${recipe.name}"?\nThis cannot be undone.`)) return
     setDeleting(true)
-    const { error } = await supabaseAdmin.from('formulations').delete().eq('id', recipe.id)
-    setDeleting(false)
-    if (error) { toast('Delete failed: ' + error.message, false); return }
-    onDeleted?.(recipe.id)
-    onClose()
+    try {
+      await sql`DELETE FROM formulations WHERE id = ${recipe.id}`
+      onDeleted?.(recipe.id)
+      onClose()
+    } catch (err) {
+      setDeleting(false)
+      toast('Delete failed: ' + err.message, false)
+    }
   }
 
   // ── Input style ──────────────────────────────────────────────────────────

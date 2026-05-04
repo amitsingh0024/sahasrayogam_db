@@ -115,7 +115,7 @@ function App() {
         setAllData(data || [])
       } catch (err) {
         console.error('Error fetching data:', err)
-        setError(`Database Error: ${err.message || 'Failed to connect'}`)
+        setError('Database Error: Failed to connect. Please try again later.')
       }
       setIsLoading(false)
     }

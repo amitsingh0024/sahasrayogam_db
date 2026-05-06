@@ -14,7 +14,11 @@ const sql = neon(process.env.NEON_CONNECTION_STRING)
 
 app.get('/api/formulations', async (_req, res) => {
   try {
-    const rows = await sql`SELECT * FROM formulations ORDER BY id ASC`
+    const rows = await sql`
+      SELECT * FROM formulations
+      ORDER BY
+        CAST(NULLIF(REGEXP_REPLACE(entry_number, '[^0-9]', '', 'g'), '') AS INTEGER) ASC NULLS LAST,
+        entry_number ASC`
     res.json(rows)
   } catch (err) {
     res.status(500).json({ error: err.message })

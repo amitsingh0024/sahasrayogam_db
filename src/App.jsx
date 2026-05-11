@@ -13,6 +13,7 @@ const CATEGORY_CONFIG = {
   KashayaParisishta:  { label: 'Kashaya Parisishta', emoji: '🍃', desc: 'Supplementary Decoctions', color: '#2C5F4A', light: '#E8F5EF' },
   Ghrita:             { emoji: '🧈', desc: 'Medicated Ghee',          color: '#7A5200', light: '#FBF3E3' },
   Taila:              { emoji: '💧', desc: 'Medicated Oils',           color: '#3D5A1F', light: '#EDF2E5' },
+  TailaParisishta:    { label: 'Taila Parisishta', emoji: '🫒', desc: 'Supplementary Oils', color: '#5C7A35', light: '#EFF5E8' },
   Choornam:           { emoji: '🌾', desc: 'Herbal Powders',           color: '#7A3F2E', light: '#F5EDE8' },
   AsavaArishta:       { emoji: '🫙', desc: 'Fermented Preparations',  color: '#5C1835', light: '#F5E8EC' },
   Lehya:              { emoji: '🍯', desc: 'Electuaries & Confections', color: '#7B3F00', light: '#FDF3E0' },

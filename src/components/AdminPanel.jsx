@@ -3,13 +3,14 @@ import { X, Zap, Save, Trash2, ChevronDown, ChevronUp, Loader2 } from 'lucide-re
 import { insertFormulation, updateFormulation, deleteFormulation } from '../lib/api'
 
 // ─── Constants ──────────────────────────────────────────────────────────────
-const CATEGORIES = ['Kashaya', 'KashayaParisishta', 'Ghrita', 'Taila', 'Choornam', 'Arishta', 'Asava', 'Lehya', 'Vati', 'Gutika']
+const CATEGORIES = ['Kashaya', 'KashayaParisishta', 'Ghrita', 'Taila', 'TailaParisishta', 'Choornam', 'Arishta', 'Asava', 'Lehya', 'Vati', 'Gutika']
 
 const CAT_META = {
   Kashaya:           { color: '#1A3C34', source: 'Kashaya.txt' },
   KashayaParisishta: { label: 'Kashaya Parisishta', color: '#2C5F4A', source: 'KashayaParisishta.txt' },
   Ghrita:            { color: '#7A5200', source: 'Ghrita.txt' },
   Taila:             { color: '#3D5A1F', source: 'Taila.txt' },
+  TailaParisishta:   { label: 'Taila Parisishta', color: '#5C7A35', source: 'TailaParisishta.txt' },
   Choornam:          { color: '#7A3F2E', source: 'Choornam.txt' },
   Arishta:           { color: '#5C1835', source: 'Asava,Arishta.txt' },
   Asava:             { color: '#2B3F6B', source: 'Asava,Arishta.txt' },

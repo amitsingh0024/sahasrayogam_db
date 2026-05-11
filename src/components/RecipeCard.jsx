@@ -5,6 +5,7 @@ const CATEGORY_COLORS = {
   KashayaParisishta: { primary: '#2C5F4A', light: '#E8F5EF', badge: '#C2E0D4', border: '#2C5F4A30' },
   Ghrita:            { primary: '#7A5200', light: '#FBF3E3', badge: '#F5E4BB', border: '#7A520030' },
   Taila:             { primary: '#3D5A1F', light: '#EDF2E5', badge: '#D8E8C8', border: '#3D5A1F30' },
+  TailaParisishta:   { primary: '#5C7A35', light: '#EFF5E8', badge: '#CCDDB0', border: '#5C7A3530' },
   Choornam:          { primary: '#7A3F2E', light: '#F5EDE8', badge: '#EDD5C5', border: '#7A3F2E30' },
   // AsavaArishta sub-categories
   Arishta:           { primary: '#5C1835', light: '#F5E8EC', badge: '#EDD0DB', border: '#5C183530' },

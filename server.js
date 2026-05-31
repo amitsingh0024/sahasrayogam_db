@@ -80,6 +80,50 @@ app.delete('/api/formulations/:id', async (req, res) => {
   }
 })
 
+// ── Semantic search ───────────────────────────────────────────────────────────
+
+const NVIDIA_EMBED_URL = 'https://integrate.api.nvidia.com/v1/embeddings'
+const EMBED_MODEL = 'nvidia/nv-embed-v1'
+
+async function embedQuery(text) {
+  const res = await fetch(NVIDIA_EMBED_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: EMBED_MODEL,
+      input: [text],
+      input_type: 'query',
+      encoding_format: 'float',
+      truncate: 'END',
+    }),
+  })
+  if (!res.ok) throw new Error(`NVIDIA API error ${res.status}`)
+  const json = await res.json()
+  return json.data[0].embedding
+}
+
+app.post('/api/semantic-search', async (req, res) => {
+  const { query, limit = 20 } = req.body
+  if (!query || !query.trim()) return res.status(400).json({ error: 'query required' })
+  try {
+    const embedding = await embedQuery(query.trim())
+    const vec = '[' + embedding.join(',') + ']'
+    // cosine distance (<=>), exclude rows with no embedding, return top matches
+    const rows = await sql`
+      SELECT *, (embedding <=> ${vec}::vector) AS distance
+      FROM formulations
+      WHERE embedding IS NOT NULL
+      ORDER BY embedding <=> ${vec}::vector
+      LIMIT ${limit}`
+    res.json(rows)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // ── Serve built frontend ──────────────────────────────────────────────────────
 
 app.use(express.static(join(__dirname, 'dist')))

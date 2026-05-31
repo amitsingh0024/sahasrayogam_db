@@ -210,7 +210,9 @@ function App() {
         <div className="h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent opacity-60" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 py-3">
+
+          {/* ── Row 1: Brand · Search · Admin ── */}
+          <div className="flex items-center gap-4 py-3">
 
             {/* Brand */}
             <div className="flex items-center gap-3 shrink-0">
@@ -231,51 +233,9 @@ function App() {
               </div>
             </div>
 
-            {/* Category tabs (desktop) */}
-            <nav className="hidden lg:flex items-center gap-1 bg-amber-50/60 p-1 rounded-2xl border border-amber-100/80 overflow-x-auto min-w-0 shrink no-scrollbar">
-              {categories.map((cat) => {
-                const isActive = category === cat.id
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => handleCategoryChange(cat.id)}
-                    className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all duration-200 ${
-                      isActive ? 'text-white shadow-md' : 'text-gray-500 hover:text-charcoal hover:bg-white/70'
-                    }`}
-                    style={isActive ? { backgroundColor: cat.color } : {}}
-                  >
-                    <span className="text-sm">{cat.emoji}</span>
-                    <span className="font-sans">{cat.label}</span>
-                    {!isLoading && categoryCounts[cat.id] > 0 && (
-                      <span
-                        className={`text-xs px-1.5 py-0.5 rounded-full font-mono leading-none ${
-                          isActive ? 'bg-white/25 text-white' : 'bg-amber-100 text-amber-700'
-                        }`}
-                      >
-                        {categoryCounts[cat.id]}
-                      </span>
-                    )}
-                  </button>
-                )
-              })}
-            </nav>
-
-            {/* Admin mode toggle */}
-            <button
-              onClick={handleAdminToggle}
-              title={adminMode ? 'Exit admin mode' : 'Admin mode'}
-              className="shrink-0 p-2 rounded-lg transition-all"
-              style={adminMode
-                ? { backgroundColor: activeCat?.color, color: '#FFF' }
-                : { color: '#9CA3AF' }
-              }
-            >
-              <PenLine size={16} />
-            </button>
-
-            {/* Search (desktop md+) */}
-            <div className="hidden md:flex items-center gap-2 grow max-w-xs">
-              <div className="relative grow">
+            {/* Search — takes all remaining space on md+ */}
+            <div className="hidden md:flex items-center gap-2 flex-1 min-w-0">
+              <div className="relative flex-1 min-w-0">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
                 <input
                   ref={desktopSug.inputRef}
@@ -310,7 +270,55 @@ function App() {
                 ))}
               </select>
             </div>
+
+            {/* Spacer on mobile so admin button stays right */}
+            <div className="flex-1 md:hidden" />
+
+            {/* Admin mode toggle */}
+            <button
+              onClick={handleAdminToggle}
+              title={adminMode ? 'Exit admin mode' : 'Admin mode'}
+              className="shrink-0 p-2 rounded-lg transition-all"
+              style={adminMode
+                ? { backgroundColor: activeCat?.color, color: '#FFF' }
+                : { color: '#9CA3AF' }
+              }
+            >
+              <PenLine size={16} />
+            </button>
           </div>
+
+          {/* ── Row 2: Category tabs (desktop lg+) ── */}
+          <div className="hidden lg:block pb-2">
+            <nav className="flex items-center gap-1 bg-amber-50/60 p-1 rounded-2xl border border-amber-100/80 overflow-x-auto no-scrollbar">
+              {categories.map((cat) => {
+                const isActive = category === cat.id
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleCategoryChange(cat.id)}
+                    className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all duration-200 ${
+                      isActive ? 'text-white shadow-md' : 'text-gray-500 hover:text-charcoal hover:bg-white/70'
+                    }`}
+                    style={isActive ? { backgroundColor: cat.color } : {}}
+                  >
+                    <span className="text-sm">{cat.emoji}</span>
+                    <span className="font-sans">{cat.label}</span>
+                    {!isLoading && categoryCounts[cat.id] > 0 && (
+                      <span
+                        className={`text-xs px-1.5 py-0.5 rounded-full font-mono leading-none ${
+                          isActive ? 'bg-white/25 text-white' : 'bg-amber-100 text-amber-700'
+                        }`}
+                      >
+                        {categoryCounts[cat.id]}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </nav>
+          </div>
+
         </div>
       </header>
 

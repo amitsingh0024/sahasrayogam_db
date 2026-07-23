@@ -188,24 +188,27 @@ function App() {
   const currentConfig = searchFields.find(f => f.id === searchField) || searchFields[0]
 
   // When a query is active, search across ALL data regardless of the active tab.
-  // Tabs are for browsing only — search always goes global.
+  // Multi-word queries use OR logic so "joint pain" finds anything mentioning
+  // either word, ranked by how well it matches overall.
+  const fuse = useMemo(() => new Fuse(allData, {
+    keys: currentConfig.keys,
+    threshold: 0.4,
+    distance: 200,
+    ignoreLocation: true,
+    includeScore: true,
+    useExtendedSearch: true,
+  }), [allData, currentConfig.keys])
+
   const filteredRecipes = useMemo(() => {
-    if (!query) return currentData
-    const terms = query.trim().split(/\s+/).filter(t => t.length > 0)
-    if (terms.length === 0) return currentData
-    let currentResults = allData
-    for (const term of terms) {
-      const fuse = new Fuse(currentResults, {
-        keys: currentConfig.keys,
-        threshold: 0.3,
-        distance: 100,
-        ignoreLocation: true,
-      })
-      currentResults = fuse.search(term).map(result => result.item)
-      if (currentResults.length === 0) break
-    }
-    return currentResults
-  }, [query, allData, currentData, currentConfig.keys])
+    const trimmed = query.trim()
+    if (!trimmed) return currentData
+    // Build OR expression: "joint pain" → "'joint | 'pain"
+    const terms = trimmed.split(/\s+/).filter(Boolean)
+    const fuseQuery = terms.length > 1
+      ? terms.map(t => `'${t}`).join(' | ')
+      : trimmed
+    return fuse.search(fuseQuery).map(r => r.item)
+  }, [query, fuse, currentData])
 
   const isGlobalSearch = query.trim().length > 0
 

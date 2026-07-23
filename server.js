@@ -12,10 +12,14 @@ const sql = neon(process.env.NEON_CONNECTION_STRING)
 
 // ── Formulations ─────────────────────────────────────────────────────────────
 
+const FORMULATION_COLS = sql`
+  id, entry_number, name, sanskrit_verse, ingredients, procedure,
+  indications, organ_affected, dosha_involved, area_affected, notes, category, source_file`
+
 app.get('/api/formulations', async (_req, res) => {
   try {
     const rows = await sql`
-      SELECT * FROM formulations
+      SELECT ${FORMULATION_COLS} FROM formulations
       ORDER BY
         CAST(NULLIF(REGEXP_REPLACE(entry_number, '[^0-9]', '', 'g'), '') AS INTEGER) ASC NULLS LAST,
         entry_number ASC`
@@ -37,7 +41,8 @@ app.post('/api/formulations', async (req, res) => {
         (${p.entry_number}, ${p.name}, ${p.sanskrit_verse}, ${p.ingredients},
          ${p.procedure}, ${p.indications}, ${p.organ_affected}, ${p.dosha_involved},
          ${p.area_affected}, ${p.notes}, ${p.category}, ${p.source_file})
-      RETURNING *`
+      RETURNING id, entry_number, name, sanskrit_verse, ingredients, procedure,
+                indications, organ_affected, dosha_involved, area_affected, notes, category, source_file`
     res.json(row)
   } catch (err) {
     res.status(500).json({ error: err.message })
@@ -63,7 +68,8 @@ app.patch('/api/formulations/:id', async (req, res) => {
         category       = ${p.category},
         source_file    = ${p.source_file}
       WHERE id = ${id}
-      RETURNING *`
+      RETURNING id, entry_number, name, sanskrit_verse, ingredients, procedure,
+                indications, organ_affected, dosha_involved, area_affected, notes, category, source_file`
     res.json(row)
   } catch (err) {
     res.status(500).json({ error: err.message })
@@ -111,9 +117,12 @@ app.post('/api/semantic-search', async (req, res) => {
   try {
     const embedding = await embedQuery(query.trim())
     const vec = '[' + embedding.join(',') + ']'
-    // cosine distance (<=>), exclude rows with no embedding, return top matches
+    // Rank by cosine distance — no hard cutoff since domain-specific text
+    // naturally yields distances in 0.85–0.96 range; top-N ranking is what matters
     const rows = await sql`
-      SELECT *, (embedding <=> ${vec}::vector) AS distance
+      SELECT id, entry_number, name, sanskrit_verse, ingredients, procedure,
+             indications, organ_affected, dosha_involved, area_affected, notes, category, source_file,
+             ROUND((embedding <=> ${vec}::vector)::numeric, 4) AS distance
       FROM formulations
       WHERE embedding IS NOT NULL
       ORDER BY embedding <=> ${vec}::vector

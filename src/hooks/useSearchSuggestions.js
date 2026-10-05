@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import Fuse from 'fuse.js'
 
 const FUSE_OPTS = {
@@ -119,9 +119,8 @@ export function useSearchSuggestions({ query, corpus, searchField, enabled, onQu
   }, [openState, activeIndex, totalItems, flatSuggestions, onSuggestionClick, close])
 
   // Open dropdown as the user types (if conditions are met)
-  useMemo(() => {
-    if (shouldShow) setIsOpen(true)
-    else setIsOpen(false)
+  useEffect(() => {
+    setIsOpen(shouldShow)
     setActiveIdx(-1)
   }, [shouldShow, activeTerm])
 

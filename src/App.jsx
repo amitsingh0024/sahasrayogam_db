@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import Fuse from 'fuse.js'
 import { Search, AlertCircle, PenLine, Sparkles, Loader2, X } from 'lucide-react'
 import RecipeCard from './components/RecipeCard'
@@ -23,6 +23,20 @@ const CATEGORY_CONFIG = {
 
 // Categories in the AsavaArishta combined tab
 const ASAVA_ARISHTA_CATS = new Set(['Arishta', 'Asava'])
+
+// Module-level constants — no recreation on every render
+const SEARCH_FIELDS = [
+  { id: 'all',           label: 'All Fields',  keys: ['name', 'ingredients', 'indications', 'sanskrit_verse', 'procedure'] },
+  { id: 'name',          label: 'Name',         keys: ['name'] },
+  { id: 'ingredients',   label: 'Ingredients',  keys: ['ingredients'] },
+  { id: 'indications',   label: 'Indications',  keys: ['indications'] },
+  { id: 'sanskrit_verse', label: 'Sanskrit',   keys: ['sanskrit_verse'] },
+  { id: 'procedure',     label: 'Procedure',    keys: ['procedure'] },
+]
+
+const CATEGORIES = Object.entries(CATEGORY_CONFIG).map(([id, cfg]) => ({ id, label: cfg.label || id, ...cfg }))
+
+const AI_SEARCH_LIMIT = 30
 
 const SkeletonCard = ({ index }) => (
   <div
@@ -60,25 +74,40 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // ── Debounced query (150ms lag) — drives search, not the input value ────
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query), 150)
+    return () => clearTimeout(t)
+  }, [query])
+
   // ── AI semantic search ───────────────────────────────────────────────────
   const [aiMode, setAiMode]       = useState(false)
   const [aiResults, setAiResults] = useState(null)   // null = no search yet
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError]     = useState(null)
+  const aiAbortRef = useRef(null)
 
   const handleAiSearch = useCallback(async (q) => {
     const trimmed = (q || query).trim()
     if (!trimmed) return
+
+    // Cancel any in-flight request
+    aiAbortRef.current?.abort()
+    const controller = new AbortController()
+    aiAbortRef.current = controller
+
     setAiLoading(true)
     setAiError(null)
     setAiResults(null)
     try {
-      const results = await semanticSearch(trimmed, 30)
-      setAiResults(results)
+      const results = await semanticSearch(trimmed, AI_SEARCH_LIMIT, controller.signal)
+      if (!controller.signal.aborted) setAiResults(results)
     } catch (err) {
-      setAiError('AI search failed. Please try again.')
+      if (err.name !== 'AbortError') setAiError('AI search failed. Please try again.')
+    } finally {
+      if (!controller.signal.aborted) setAiLoading(false)
     }
-    setAiLoading(false)
   }, [query])
 
   const toggleAiMode = useCallback(() => {
@@ -87,6 +116,7 @@ function App() {
         setAiResults(null)
         setAiError(null)
         setQuery('')
+        setDebouncedQuery('')
       }
       return !prev
     })
@@ -122,7 +152,6 @@ function App() {
 
   const handleSaved = useCallback((newRow) => {
     setAllData(prev => [...prev, newRow])
-    // Switch to that category tab so the user sees the result
     if (newRow.category) {
       if (newRow.category === 'Arishta' || newRow.category === 'Asava') setCategory('AsavaArishta')
       else setCategory(newRow.category)
@@ -155,11 +184,9 @@ function App() {
     fetchData()
   }, [])
 
-  const categories = Object.entries(CATEGORY_CONFIG).map(([id, cfg]) => ({ id, label: cfg.label || id, ...cfg }))
-
   const categoryCounts = useMemo(() => {
     const counts = {}
-    categories.forEach(c => {
+    CATEGORIES.forEach(c => {
       if (c.id === 'AsavaArishta') {
         counts[c.id] = allData.filter(item => ASAVA_ARISHTA_CATS.has(item.category)).length
       } else {
@@ -176,20 +203,8 @@ function App() {
     return allData.filter(item => item.category === category)
   }, [allData, category])
 
-  const searchFields = [
-    { id: 'all',          label: 'All Fields',  keys: ['name', 'ingredients', 'indications', 'sanskrit_verse', 'procedure'] },
-    { id: 'name',         label: 'Name',        keys: ['name'] },
-    { id: 'ingredients',  label: 'Ingredients', keys: ['ingredients'] },
-    { id: 'indications',  label: 'Indications', keys: ['indications'] },
-    { id: 'sanskrit_verse', label: 'Sanskrit',  keys: ['sanskrit_verse'] },
-    { id: 'procedure',    label: 'Procedure',   keys: ['procedure'] },
-  ]
+  const currentConfig = SEARCH_FIELDS.find(f => f.id === searchField) || SEARCH_FIELDS[0]
 
-  const currentConfig = searchFields.find(f => f.id === searchField) || searchFields[0]
-
-  // When a query is active, search across ALL data regardless of the active tab.
-  // Multi-word queries use OR logic so "joint pain" finds anything mentioning
-  // either word, ranked by how well it matches overall.
   const fuse = useMemo(() => new Fuse(allData, {
     keys: currentConfig.keys,
     threshold: 0.4,
@@ -199,8 +214,9 @@ function App() {
     useExtendedSearch: true,
   }), [allData, currentConfig.keys])
 
+  // Uses debouncedQuery so Fuse doesn't run on every keystroke
   const filteredRecipes = useMemo(() => {
-    const trimmed = query.trim()
+    const trimmed = debouncedQuery.trim()
     if (!trimmed) return currentData
     // AND logic: "Jwara Fever" → "'Jwara 'Fever" — all terms must appear
     const terms = trimmed.split(/\s+/).filter(Boolean)
@@ -208,9 +224,15 @@ function App() {
       ? terms.map(t => `'${t}`).join(' ')
       : trimmed
     return fuse.search(fuseQuery).map(r => r.item)
-  }, [query, fuse, currentData])
+  }, [debouncedQuery, fuse, currentData])
 
-  const isGlobalSearch = query.trim().length > 0
+  const isGlobalSearch = debouncedQuery.trim().length > 0
+
+  // Memoised once — not split inside every RecipeCard render
+  const searchTerms = useMemo(
+    () => debouncedQuery.trim().split(/\s+/).filter(t => t.length > 0),
+    [debouncedQuery]
+  )
 
   const activeCat = CATEGORY_CONFIG[category]
 
@@ -220,7 +242,7 @@ function App() {
     [allData]
   )
 
-  // Two independent hook instances — one for the desktop input, one for mobile
+  // Suggestions use live `query` (no debounce) so autocomplete stays instant
   const desktopSug = useSearchSuggestions({
     query, corpus, searchField, enabled: !isLoading, onQueryChange: setQuery,
   })
@@ -228,10 +250,11 @@ function App() {
     query, corpus, searchField, enabled: !isLoading, onQueryChange: setQuery,
   })
 
-  const handleCategoryChange = (catId) => {
+  const handleCategoryChange = useCallback((catId) => {
     setCategory(catId)
     setQuery('')
-  }
+    setDebouncedQuery('')
+  }, [])
 
   return (
     <div className="min-h-screen bg-cream selection:bg-accent/30">
@@ -344,7 +367,7 @@ function App() {
                   onChange={(e) => setSearchField(e.target.value)}
                   className="shrink-0 bg-white border border-amber-200/60 rounded-full px-3 py-2 text-xs text-gray-600 focus:outline-none cursor-pointer font-sans"
                 >
-                  {searchFields.map(field => (
+                  {SEARCH_FIELDS.map(field => (
                     <option key={field.id} value={field.id}>{field.label}</option>
                   ))}
                 </select>
@@ -387,7 +410,7 @@ function App() {
           {/* ── Row 2: Category tabs (desktop lg+) ── */}
           <div className="hidden lg:block pb-2">
             <nav className="flex items-center gap-1 bg-amber-50/60 p-1 rounded-2xl border border-amber-100/80 overflow-x-auto no-scrollbar">
-              {categories.map((cat) => {
+              {CATEGORIES.map((cat) => {
                 const isActive = category === cat.id
                 return (
                   <button
@@ -423,67 +446,122 @@ function App() {
         className="md:hidden sticky z-40 bg-white/95 backdrop-blur-md px-4 py-3 space-y-2.5"
         style={{ top: '57px', borderBottom: '1px solid rgba(197,160,89,0.2)' }}
       >
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
-          <input
-            ref={mobileSug.inputRef}
-            type="text"
-            placeholder="Search all formulations…"
-            className="w-full pl-9 pr-4 py-2.5 bg-amber-50/70 border border-amber-200/60 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-amber-300/40 focus:bg-white transition-all font-garamond"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={mobileSug.onKeyDown}
-            onFocus={mobileSug.onInputFocus}
-            onBlur={() => setTimeout(mobileSug.close, 150)}
-            autoComplete="off"
-          />
-          <SearchDropdown
-            suggestions={mobileSug.suggestions}
-            isOpen={mobileSug.isOpen}
-            activeIndex={mobileSug.activeIndex}
-            flatSuggestions={mobileSug.flatSuggestions}
-            onSuggestionClick={mobileSug.onSuggestionClick}
-            dropdownRef={mobileSug.dropdownRef}
-            accentColor={activeCat?.color}
-          />
-        </div>
-        <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-          {categories.map((cat) => {
-            const isActive = category === cat.id
-            return (
-              <button
-                key={cat.id}
-                onClick={() => handleCategoryChange(cat.id)}
-                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold font-sans transition-all ${
-                  isActive ? 'text-white shadow-sm' : 'bg-white text-gray-500 border border-gray-100'
-                }`}
-                style={isActive ? { backgroundColor: cat.color } : {}}
-              >
-                <span>{cat.emoji}</span>
-                <span>{cat.label}</span>
-              </button>
-            )
-          })}
-          <div className="w-px bg-amber-100/80 mx-1 shrink-0 self-stretch" />
-          {searchFields.map(field => (
-            <button
-              key={field.id}
-              onClick={() => setSearchField(field.id)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold font-sans transition-all ${
-                searchField === field.id
-                  ? 'text-white shadow-sm'
-                  : 'bg-white text-gray-500 border border-gray-100'
+        {/* Mobile search row with AI toggle */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleAiMode}
+            title={aiMode ? 'Switch to keyword search' : 'AI semantic search'}
+            className={`shrink-0 flex items-center justify-center w-9 h-9 rounded-full transition-all border ${
+              aiMode
+                ? 'text-white border-transparent shadow-md'
+                : 'text-gray-400 bg-white border-amber-200/60'
+            }`}
+            style={aiMode ? { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' } : {}}
+          >
+            <Sparkles size={14} />
+          </button>
+
+          <div className="relative flex-1">
+            {aiMode
+              ? <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2" size={14} style={{ color: '#8b5cf6' }} />
+              : <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+            }
+            <input
+              ref={mobileSug.inputRef}
+              type="text"
+              placeholder={aiMode ? 'Describe symptoms… (press Enter)' : 'Search all formulations…'}
+              className={`w-full pl-9 pr-4 py-2.5 border rounded-full text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-garamond ${
+                aiMode
+                  ? 'bg-violet-50/60 border-violet-200/80 focus:ring-violet-200/40'
+                  : 'bg-amber-50/70 border-amber-200/60 focus:ring-amber-300/40'
               }`}
-              style={searchField === field.id ? { backgroundColor: activeCat?.color } : {}}
-            >
-              {field.label}
-            </button>
-          ))}
+              value={query}
+              onChange={(e) => { setQuery(e.target.value); if (aiMode) { setAiResults(null); setAiError(null) } }}
+              onKeyDown={(e) => {
+                if (aiMode) {
+                  if (e.key === 'Enter') handleAiSearch()
+                  if (e.key === 'Escape') { setQuery(''); setAiResults(null) }
+                } else {
+                  mobileSug.onKeyDown(e)
+                }
+              }}
+              onFocus={aiMode ? undefined : mobileSug.onInputFocus}
+              onBlur={aiMode ? undefined : () => setTimeout(mobileSug.close, 150)}
+              autoComplete="off"
+            />
+            {aiMode && query && (
+              <button
+                onClick={() => { setQuery(''); setAiResults(null); setAiError(null) }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X size={14} />
+              </button>
+            )}
+            {!aiMode && (
+              <SearchDropdown
+                suggestions={mobileSug.suggestions}
+                isOpen={mobileSug.isOpen}
+                activeIndex={mobileSug.activeIndex}
+                flatSuggestions={mobileSug.flatSuggestions}
+                onSuggestionClick={mobileSug.onSuggestionClick}
+                dropdownRef={mobileSug.dropdownRef}
+                accentColor={activeCat?.color}
+              />
+            )}
           </div>
-          {/* Right fade — indicates more tabs to scroll */}
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white/90 to-transparent" />
+
+          {aiMode && (
+            <button
+              onClick={() => handleAiSearch()}
+              disabled={aiLoading || !query.trim()}
+              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-white transition-all disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+            >
+              {aiLoading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+            </button>
+          )}
         </div>
+
+        {/* Category + field pills — hidden in AI mode */}
+        {!aiMode && (
+          <div className="relative">
+            <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            {CATEGORIES.map((cat) => {
+              const isActive = category === cat.id
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategoryChange(cat.id)}
+                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold font-sans transition-all ${
+                    isActive ? 'text-white shadow-sm' : 'bg-white text-gray-500 border border-gray-100'
+                  }`}
+                  style={isActive ? { backgroundColor: cat.color } : {}}
+                >
+                  <span>{cat.emoji}</span>
+                  <span>{cat.label}</span>
+                </button>
+              )
+            })}
+            <div className="w-px bg-amber-100/80 mx-1 shrink-0 self-stretch" />
+            {SEARCH_FIELDS.map(field => (
+              <button
+                key={field.id}
+                onClick={() => setSearchField(field.id)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold font-sans transition-all ${
+                  searchField === field.id
+                    ? 'text-white shadow-sm'
+                    : 'bg-white text-gray-500 border border-gray-100'
+                }`}
+                style={searchField === field.id ? { backgroundColor: activeCat?.color } : {}}
+              >
+                {field.label}
+              </button>
+            ))}
+            </div>
+            {/* Right fade — indicates more tabs to scroll */}
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white/90 to-transparent" />
+          </div>
+        )}
       </div>
 
       {/* ── MAIN ── */}
@@ -652,7 +730,7 @@ function App() {
                       adminMode={adminMode}
                       onEdit={openEditEntry}
                       showCategory={isGlobalSearch}
-                      searchTerms={isGlobalSearch ? query.trim().split(/\s+/).filter(t => t.length > 0) : []}
+                      searchTerms={isGlobalSearch ? searchTerms : []}
                     />
                   </div>
                 ))
@@ -677,8 +755,17 @@ function App() {
                     </button>
                     {', or an ingredient name'}
                   </p>
+                  {query && (
+                    <button
+                      className="mt-3 flex items-center gap-1.5 text-xs font-sans font-bold px-4 py-2 rounded-full border border-violet-200 text-violet-600 hover:bg-violet-50 transition-colors mx-auto"
+                      onClick={() => { setAiMode(true); handleAiSearch(query) }}
+                    >
+                      <Sparkles size={12} />
+                      Try AI Search
+                    </button>
+                  )}
                   <button
-                    className="mt-5 text-xs font-sans font-bold px-4 py-2 rounded-full border border-amber-200 text-amber-700 hover:bg-amber-50 transition-colors"
+                    className="mt-3 text-xs font-sans font-bold px-4 py-2 rounded-full border border-amber-200 text-amber-700 hover:bg-amber-50 transition-colors"
                     onClick={() => setQuery('')}
                   >
                     Clear search

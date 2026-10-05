@@ -21,5 +21,5 @@ export const updateFormulation = (id, payload) =>
 export const deleteFormulation = (id) =>
   request(`/formulations/${id}`, { method: 'DELETE' })
 
-export const semanticSearch = (query, limit = 20) =>
-  request('/semantic-search', { method: 'POST', body: JSON.stringify({ query, limit }) })
+export const semanticSearch = (query, limit = 20, signal) =>
+  request('/semantic-search', { method: 'POST', body: JSON.stringify({ query, limit }), signal })

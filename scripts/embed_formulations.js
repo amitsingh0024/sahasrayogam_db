@@ -11,7 +11,7 @@ import pg from 'pg'
 const { Client } = pg
 const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY
 const NVIDIA_EMBED_URL = 'https://integrate.api.nvidia.com/v1/embeddings'
-const MODEL = 'nvidia/nv-embed-v1'
+const MODEL = 'nvidia/nemotron-3-embed-1b'
 const BATCH_SIZE = 10   // rows per API call (keep low to avoid payload limits)
 const DELAY_MS  = 500   // ms between batches (rate-limit headroom)
 

@@ -22,7 +22,7 @@ function expandParens(token) {
 export function buildSuggestionCorpus(allData) {
   const nameList = []
   const ingMap   = new Map()   // lowercase → original casing
-  const indMap   = new Map()
+  const indMap   = new Map()   // indications + dosha + organ + area
 
   for (const entry of allData) {
     // ── Names ──────────────────────────────────────────────
@@ -51,9 +51,10 @@ export function buildSuggestionCorpus(allData) {
       }
     }
 
-    // ── Indications ────────────────────────────────────────
-    if (entry.indications) {
-      for (const part of entry.indications.split(/[\n,]/)) {
+    // ── Indications + dosha / organ / area ────────────────
+    for (const field of [entry.indications, entry.dosha_involved, entry.organ_affected, entry.area_affected]) {
+      if (!field) continue
+      for (const part of field.split(/[\n,]/)) {
         const clean = part.trim()
         addUnique(indMap, clean)
       }

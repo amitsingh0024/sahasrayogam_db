@@ -89,7 +89,7 @@ app.delete('/api/formulations/:id', async (req, res) => {
 // ── Semantic search ───────────────────────────────────────────────────────────
 
 const NVIDIA_EMBED_URL = 'https://integrate.api.nvidia.com/v1/embeddings'
-const EMBED_MODEL = 'nvidia/nv-embed-v1'
+const EMBED_MODEL = 'nvidia/nemotron-3-embed-1b'
 
 async function embedQuery(text) {
   const res = await fetch(NVIDIA_EMBED_URL, {

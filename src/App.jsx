@@ -202,10 +202,10 @@ function App() {
   const filteredRecipes = useMemo(() => {
     const trimmed = query.trim()
     if (!trimmed) return currentData
-    // Build OR expression: "joint pain" → "'joint | 'pain"
+    // AND logic: "Jwara Fever" → "'Jwara 'Fever" — all terms must appear
     const terms = trimmed.split(/\s+/).filter(Boolean)
     const fuseQuery = terms.length > 1
-      ? terms.map(t => `'${t}`).join(' | ')
+      ? terms.map(t => `'${t}`).join(' ')
       : trimmed
     return fuse.search(fuseQuery).map(r => r.item)
   }, [query, fuse, currentData])

@@ -9,7 +9,7 @@ export default defineConfig({
     host: true,
     allowedHosts: ['.ngrok-free.app', '.ngrok-free.dev'],
     proxy: {
-      '/api': 'http://localhost:3001',
+      '/api': 'http://127.0.0.1:3001',
     },
   }
 })

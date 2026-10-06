@@ -1,10 +1,23 @@
 const BASE = '/api'
 
 async function request(path, options = {}) {
+  const token = localStorage.getItem('admin_token')
+  const headers = {
+    'Content-Type': 'application/json',
+  }
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
+
   const res = await fetch(BASE + path, {
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers: { ...headers, ...options.headers },
   })
+  
+  if (res.status === 401) {
+    throw new Error("Unauthorized: Invalid or missing Admin Password")
+  }
+
   const json = await res.json()
   if (!res.ok) throw new Error(json.error || `Request failed (${res.status})`)
   return json
@@ -23,3 +36,6 @@ export const deleteFormulation = (id) =>
 
 export const semanticSearch = (query, limit = 20, signal) =>
   request('/semantic-search', { method: 'POST', body: JSON.stringify({ query, limit }), signal })
+
+export const searchFormulations = (query, category, limit = 20, signal) =>
+  request('/search', { method: 'POST', body: JSON.stringify({ query, category, limit }), signal })

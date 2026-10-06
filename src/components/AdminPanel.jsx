@@ -173,6 +173,7 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
   const [showPaste,  setShowPaste]  = useState(!isEdit)
   const [flashSet,   setFlashSet]   = useState(new Set())
   const [saving,     setSaving]     = useState(false)
+  const [adminToken, setAdminToken] = useState(() => localStorage.getItem('admin_token') || '')
   const [deleting,   setDeleting]   = useState(false)
   const [toastMsg,   setToastMsg]   = useState(null)  // { text, ok }
 
@@ -488,31 +489,48 @@ export default function AdminPanel({ recipe, onClose, onSaved, onUpdated, onDele
 
         {/* ── Footer actions ────────────────────────────────────────────── */}
         <div
-          className="shrink-0 px-5 py-4 flex items-center gap-3"
+          className="shrink-0 px-5 py-4 flex flex-col gap-3"
           style={{ borderTop: `1px solid ${borderC}` }}
         >
-          {isEdit && (
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-sm font-semibold font-sans text-red-500 border-red-200 hover:bg-red-50 transition-colors disabled:opacity-40 shrink-0"
-            >
-              {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-              {deleting ? 'Deleting…' : 'Delete'}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400 shrink-0">Admin Key:</span>
+            <input
+              type="password"
+              value={adminToken}
+              onChange={e => {
+                setAdminToken(e.target.value)
+                localStorage.setItem('admin_token', e.target.value)
+              }}
+              placeholder="Enter password..."
+              className={inputCls}
+              style={{ ...inputStyle, padding: '6px 12px', fontSize: '13px' }}
+            />
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {isEdit && (
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-sm font-semibold font-sans text-red-500 border-red-200 hover:bg-red-50 transition-colors disabled:opacity-40 shrink-0"
+              >
+                {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                {deleting ? 'Deleting…' : 'Delete'}
+              </button>
+            )}
 
-          <button
-            onClick={handleSave}
-            disabled={saving || !name.trim()}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-white text-sm font-bold font-sans transition-all disabled:opacity-40 hover:opacity-90"
-            style={{ backgroundColor: accent }}
-          >
-            {saving
-              ? <><Loader2 size={15} className="animate-spin" /> Saving…</>
-              : <><Save size={15} /> {isEdit ? 'Update Formula' : 'Save to Database'}</>
-            }
-          </button>
+            <button
+              onClick={handleSave}
+              disabled={saving || !name.trim()}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-white text-sm font-bold font-sans transition-all disabled:opacity-40 hover:opacity-90"
+              style={{ backgroundColor: accent }}
+            >
+              {saving
+                ? <><Loader2 size={15} className="animate-spin" /> Saving…</>
+                : <><Save size={15} /> {isEdit ? 'Update Formula' : 'Save to Database'}</>
+              }
+            </button>
+          </div>
         </div>
 
         {/* ── Inline toast ──────────────────────────────────────────────── */}

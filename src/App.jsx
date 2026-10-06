@@ -4,7 +4,7 @@ import { Search, AlertCircle, PenLine, Sparkles, Loader2, X } from 'lucide-react
 import RecipeCard from './components/RecipeCard'
 import AdminPanel from './components/AdminPanel'
 import SearchDropdown from './components/SearchDropdown'
-import { fetchFormulations, semanticSearch } from './lib/api'
+import { fetchFormulations, semanticSearch, searchFormulations } from './lib/api'
 import { buildSuggestionCorpus } from './lib/suggestionCorpus'
 import { useSearchSuggestions } from './hooks/useSearchSuggestions'
 
@@ -26,10 +26,10 @@ const ASAVA_ARISHTA_CATS = new Set(['Arishta', 'Asava'])
 
 // Module-level constants — no recreation on every render
 const SEARCH_FIELDS = [
-  { id: 'all',           label: 'All Fields',  keys: ['name', 'ingredients', 'indications', 'sanskrit_verse', 'procedure'] },
+  { id: 'all',           label: 'All Fields',  keys: ['name', 'ingredients', 'indications', 'sanskrit_verse', 'procedure', 'dosha_involved', 'organ_affected', 'area_affected', 'notes'] },
   { id: 'name',          label: 'Name',         keys: ['name'] },
   { id: 'ingredients',   label: 'Ingredients',  keys: ['ingredients'] },
-  { id: 'indications',   label: 'Indications',  keys: ['indications'] },
+  { id: 'indications',   label: 'Indications',  keys: ['indications', 'dosha_involved', 'organ_affected', 'area_affected'] },
   { id: 'sanskrit_verse', label: 'Sanskrit',   keys: ['sanskrit_verse'] },
   { id: 'procedure',     label: 'Procedure',    keys: ['procedure'] },
 ]
@@ -67,25 +67,49 @@ const SkeletonCard = ({ index }) => (
 )
 
 function App() {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('q') || ''
+  })
   const [searchField, setSearchField] = useState('all')
-  const [category, setCategory] = useState('Kashaya')
+  const [category, setCategory] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('cat') || 'Kashaya'
+  })
   const [allData, setAllData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const [searchResults, setSearchResults] = useState(null)
+  const [searchLoading, setSearchLoading] = useState(false)
+
   // ── Debounced query (150ms lag) — drives search, not the input value ────
-  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState(query)
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query), 150)
     return () => clearTimeout(t)
   }, [query])
 
   // ── AI semantic search ───────────────────────────────────────────────────
-  const [aiMode, setAiMode]       = useState(false)
+  const [aiMode, setAiMode]       = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('ai') === 'true'
+  })
   const [aiResults, setAiResults] = useState(null)   // null = no search yet
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError]     = useState(null)
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const params = new URLSearchParams()
+      if (debouncedQuery) params.set('q', debouncedQuery)
+      if (category !== 'Kashaya') params.set('cat', category)
+      if (aiMode) params.set('ai', 'true')
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`
+      window.history.replaceState({}, '', newUrl)
+    }, 1000)
+    return () => clearTimeout(t)
+  }, [debouncedQuery, category, aiMode])
   const aiAbortRef = useRef(null)
 
   const handleAiSearch = useCallback(async (q) => {
@@ -205,26 +229,35 @@ function App() {
 
   const currentConfig = SEARCH_FIELDS.find(f => f.id === searchField) || SEARCH_FIELDS[0]
 
-  const fuse = useMemo(() => new Fuse(allData, {
-    keys: currentConfig.keys,
-    threshold: 0.4,
-    distance: 200,
-    ignoreLocation: true,
-    includeScore: true,
-    useExtendedSearch: true,
-  }), [allData, currentConfig.keys])
+  const searchAbortRef = useRef(null)
 
-  // Uses debouncedQuery so Fuse doesn't run on every keystroke
-  const filteredRecipes = useMemo(() => {
+  useEffect(() => {
     const trimmed = debouncedQuery.trim()
-    if (!trimmed) return currentData
-    // AND logic: "Jwara Fever" → "'Jwara 'Fever" — all terms must appear
-    const terms = trimmed.split(/\s+/).filter(Boolean)
-    const fuseQuery = terms.length > 1
-      ? terms.map(t => `'${t}`).join(' ')
-      : trimmed
-    return fuse.search(fuseQuery).map(r => r.item)
-  }, [debouncedQuery, fuse, currentData])
+    if (!trimmed) {
+      setSearchResults(null)
+      return
+    }
+    if (aiMode) return // AI handles its own fetch
+
+    const doSearch = async () => {
+      if (searchAbortRef.current) searchAbortRef.current.abort()
+      searchAbortRef.current = new AbortController()
+      setSearchLoading(true)
+      try {
+        const catParam = category === 'AsavaArishta' ? 'AsavaArishta' : category
+        // In a real app we might pass searchField, but for now our backend does a global FTS
+        const res = await searchFormulations(trimmed, catParam, 100, searchAbortRef.current.signal)
+        setSearchResults(res)
+      } catch (err) {
+        if (err.name !== 'AbortError') console.error('Search error', err)
+      } finally {
+        setSearchLoading(false)
+      }
+    }
+    doSearch()
+  }, [debouncedQuery, category, aiMode])
+
+  const filteredRecipes = searchResults !== null ? searchResults : currentData
 
   const isGlobalSearch = debouncedQuery.trim().length > 0
 
@@ -704,7 +737,7 @@ function App() {
                 )}
               </div>
               <p className="text-sm font-sans font-medium text-gray-400">
-                {isLoading ? (
+                {isLoading || searchLoading ? (
                   <span className="text-amber-600">Loading formulary…</span>
                 ) : (
                   <>
@@ -718,9 +751,8 @@ function App() {
               </p>
             </div>
 
-            {/* Regular grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-24">
-              {isLoading ? (
+              {isLoading || searchLoading ? (
                 Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} index={i} />)
               ) : filteredRecipes.length > 0 ? (
                 filteredRecipes.map((recipe, i) => (
@@ -777,16 +809,34 @@ function App() {
         )}
       </main>
 
-      {/* ── Floating "Add" button (admin mode only) ── */}
+      {/* ── Floating Admin Buttons ── */}
       {adminMode && (
-        <button
-          onClick={openNewEntry}
-          title="Add new formula"
-          className="fixed bottom-8 right-8 z-40 w-14 h-14 rounded-full text-white text-2xl shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
-          style={{ backgroundColor: activeCat?.color }}
-        >
-          +
-        </button>
+        <div className="fixed bottom-8 right-8 z-40 flex flex-col gap-4">
+          <button
+            onClick={() => {
+              const dataStr = JSON.stringify(allData, null, 2);
+              const blob = new Blob([dataStr], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `kashaya_backup_${new Date().toISOString().split('T')[0]}.json`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            title="Download full database backup"
+            className="w-14 h-14 rounded-full text-white shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 bg-gray-800"
+          >
+            <span className="text-xl">⬇️</span>
+          </button>
+          <button
+            onClick={openNewEntry}
+            title="Add new formula"
+            className="w-14 h-14 rounded-full text-white text-2xl shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+            style={{ backgroundColor: activeCat?.color }}
+          >
+            +
+          </button>
+        </div>
       )}
 
       {/* ── Admin panel ── */}
